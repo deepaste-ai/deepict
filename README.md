@@ -6,42 +6,39 @@
 [![Mantine](https://img.shields.io/badge/Mantine-339AF0?style=for-the-badge&logo=mantine&logoColor=white)](https://mantine.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-> 🚀 **Deepict** 是一个基于 AI 的 JSON 数据可视化工具，让复杂的 JSON 数据变得直观易懂。通过智能分析和美观的可视化界面，帮助开发者快速理解和分析数据结构。
+> 🚀 **Deepict** is an AI-powered JSON data visualization tool that makes complex JSON data intuitive and easy to understand. Through intelligent analysis and beautiful visualization interfaces, it helps developers quickly understand and analyze data structures.
 
-## 🎥 产品演示
+## 🎥 Product Demo
 
-<video width="100%" controls>
-  <source src="demo.mp4" type="video/mp4">
-  <p>您的浏览器不支持视频播放。<a href="demo.mp4">点击此处下载视频</a></p>
-</video>
+https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
 
-*👆 观看 Deepict 的完整功能演示*
+*👆 Watch the complete feature demonstration of Deepict*
 
-## 🌟 核心特性
+## 🌟 Core Features
 
-- **🤖 AI 智能分析** - 使用 Claude AI 自动分析 JSON 数据结构并生成最佳可视化方案
-- **📊 多种可视化** - 支持表格、图表、树状图等多种数据展示方式
-- **🎨 美观界面** - 现代化的深色主题设计，符合苹果设计标准
-- **📁 文件支持** - 支持 JSON 和 JSONL 文件格式的拖拽上传
-- **💬 智能对话** - 通过聊天界面与 AI 交互，定制化数据可视化需求
-- **🔍 数据搜索** - 快速搜索和筛选 JSON 数据中的特定内容
-- **🖥️ 桌面应用** - 跨平台桌面应用，支持 Windows、macOS 和 Linux
+- **🤖 AI Smart Analysis** - Uses Claude AI to automatically analyze JSON data structure and generate optimal visualization solutions
+- **📊 Multiple Visualizations** - Supports tables, charts, tree diagrams and various data display methods
+- **🎨 Beautiful Interface** - Modern dark theme design following Apple design standards
+- **📁 File Support** - Supports drag-and-drop upload for JSON and JSONL file formats
+- **💬 Smart Conversation** - Interact with AI through chat interface for customized data visualization needs
+- **🔍 Data Search** - Quickly search and filter specific content in JSON data
+- **🖥️ Desktop Application** - Cross-platform desktop app supporting Windows, macOS and Linux
 
-## 🎯 使用场景
+## 🎯 Use Cases
 
-- **API 开发调试** - 快速查看和分析 API 响应数据
-- **数据分析** - 将复杂的 JSON 数据转换为直观的可视化图表
-- **日志分析** - 分析 JSONL 格式的日志文件
-- **配置文件查看** - 可视化查看和编辑配置文件
-- **数据迁移** - 验证和分析数据迁移过程中的 JSON 格式
+- **API Development & Debugging** - Quickly view and analyze API response data
+- **Data Analysis** - Convert complex JSON data into intuitive visualization charts
+- **Log Analysis** - Analyze JSONL format log files
+- **Configuration File Viewing** - Visualize and edit configuration files
+- **Data Migration** - Validate and analyze JSON formats during data migration process
 
 ---
 
-## 🛠️ 技术架构
+## 🛠️ Technical Architecture
 
 [🇨🇳 中文版](./README_CN.md)
 
-## ✨ Features
+## ✨ Technical Features
 
 - **🚀 Next.js 15** - Latest App Router with React 19
 - **⚡ Electron 37** - Cross-platform desktop app framework
@@ -65,6 +62,7 @@
 | **Desktop**         | Electron 37                   | Cross-platform desktop runtime     |
 | **UI Library**      | Mantine 8                     | Component library with theming     |
 | **Styling**         | Emotion + Tailwind CSS + Sass | Multi-layered styling solution     |
+| **AI Service**      | Anthropic Claude              | Smart data analysis and visualization |
 | **Language**        | TypeScript                    | Type-safe development              |
 | **Package Manager** | pnpm                          | Fast, efficient package management |
 | **Build Tool**      | tsup                          | TypeScript bundler for Electron    |
@@ -76,13 +74,14 @@
 
 - Node.js 18+
 - pnpm 8+
+- Anthropic API Key (for AI features)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/AIEPhoenix/aie-nextjs-electron-template.git
-cd aie-nextjs-electron-template
+git clone https://github.com/deepaste-ai/deepict
+cd deepict
 
 # Install dependencies
 pnpm install
@@ -90,6 +89,13 @@ pnpm install
 # Start development server
 pnpm dev
 ```
+
+### Setup API Key
+
+1. Launch the application
+2. Click the settings button in the AI chat panel
+3. Enter your Anthropic API Key
+4. Start using AI-powered visualization features
 
 The application will launch with:
 
@@ -134,16 +140,26 @@ pnpm format       # Format code with dprint
 ```
 ├── src/
 │   ├── app/                 # Next.js App Router pages
+│   │   ├── fapi/            # API routes for AI services
 │   │   ├── layout.tsx       # Root layout with providers
-│   │   └── page.tsx         # Home page
+│   │   └── page.tsx         # Main application page
 │   ├── components/          # React components
+│   │   ├── AIChat.tsx       # AI chat interface
+│   │   ├── JsonViewer.tsx   # JSON data viewer
+│   │   ├── JsonList.tsx     # JSON list navigation
+│   │   ├── FileDropzone.tsx # File upload component
+│   │   ├── Settings.tsx     # Settings configuration
 │   │   └── basic/           # Core registry components
+│   ├── stores/              # Zustand state management
+│   ├── services/            # API services and SSE
+│   ├── utils/               # Utility functions
 │   ├── styles/              # Global styles and Sass files
 │   ├── types/               # TypeScript type definitions
 │   └── assets/              # Static assets
 ├── electron/
 │   ├── main.ts              # Electron main process
 │   └── preload.ts           # Preload script for IPC
+├── build-assets/            # Build assets (icons, etc.)
 ├── public/                  # Static files
 ├── build/                   # Compiled Electron files
 └── .next/                   # Next.js build output
@@ -151,24 +167,33 @@ pnpm format       # Format code with dprint
 
 ## 🎯 Key Features Explained
 
-### Dual-Process Architecture
+### AI-Powered Data Analysis
 
-- **Main Process**: Manages app lifecycle and creates renderer processes
-- **Renderer Process**: Runs the Next.js application
-- **Preload Script**: Provides secure bridge between main and renderer
+- **Smart Structure Recognition**: Automatically detects data patterns and relationships
+- **Context-Aware Visualization**: Generates appropriate charts based on data type and content
+- **Natural Language Interface**: Describe what you want to see in plain English
+- **Iterative Refinement**: Continuously improve visualizations through conversation
 
-### Integrated Styling Stack
+### Multi-Format Data Support
 
-- **Mantine**: Primary UI components with built-in theming
-- **Emotion**: Component-specific styling with CSS-in-JS
-- **Tailwind CSS**: Utility classes for rapid development
-- **Sass**: Global styles and Mantine customization
+- **JSON Files**: Standard JSON data structures
+- **JSONL Files**: Line-delimited JSON for streaming data and logs
+- **Drag & Drop**: Intuitive file upload with visual feedback
+- **Real-time Processing**: Instant parsing and visualization
 
-### Production Optimization
+### Comprehensive Visualization Engine
 
-- **Standalone Output**: Next.js builds optimized for Electron packaging
-- **Code Splitting**: Automatic bundle optimization
-- **Tree Shaking**: Removes unused code for smaller builds
+- **Interactive Charts**: Dynamic charts with ECharts integration
+- **Data Tables**: Sortable and filterable tabular views
+- **Tree Visualization**: Hierarchical data representation
+- **Code Highlighting**: Syntax-highlighted JSON with collapsible sections
+
+### Desktop Application Benefits
+
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Local Processing**: No data leaves your machine
+- **Offline Capable**: Works without internet connection
+- **Performance**: Native desktop performance with web technologies
 
 ## 🔧 Configuration
 
@@ -177,20 +202,42 @@ pnpm format       # Format code with dprint
 Create a `.env.local` file for local development:
 
 ```env
-# Add your environment variables here
-NEXT_PUBLIC_APP_NAME=Your App Name
+# Anthropic API Key (optional - can be set in app settings)
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# App Configuration
+NEXT_PUBLIC_APP_NAME=Deepict
 ```
 
-### Customizing Electron Window
+### API Key Setup
 
-Edit `electron/main.ts` to customize window behavior:
+You can configure your Anthropic API Key in two ways:
+
+1. **Through the Application** (Recommended):
+   - Launch Deepict
+   - Click the settings icon in the AI chat panel
+   - Enter your API key securely
+
+2. **Environment Variable**:
+   - Set `ANTHROPIC_API_KEY` in your `.env.local` file
+   - Restart the application
+
+### Customizing Visualization
+
+- **AI Prompts**: Modify system prompts in `src/servers/fapi/index.ts`
+- **Chart Themes**: Update chart configurations for different themes
+- **UI Theme**: Customize Mantine theme in `src/components/basic/MantineRegistry.tsx`
+
+### Window Configuration
+
+Edit `electron/main.ts` to customize the application window:
 
 ```typescript
 const mainWindow = new BrowserWindow({
-  width: 1200,
-  height: 800,
-  minWidth: 800,
-  minHeight: 600,
+  width: 1400,
+  height: 900,
+  minWidth: 1000,
+  minHeight: 700,
   // Add more window options
 });
 ```
@@ -247,18 +294,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Next.js](https://nextjs.org/) - The React Framework for Production
 - [Electron](https://www.electronjs.org/) - Build cross-platform desktop apps
 - [Mantine](https://mantine.dev/) - Modern React components library
+- [Anthropic](https://www.anthropic.com/) - AI services powering intelligent data analysis
+- [ECharts](https://echarts.apache.org/) - Powerful charting and visualization library
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Emotion](https://emotion.sh/) - CSS-in-JS library
+- [Zustand](https://github.com/pmndrs/zustand) - Lightweight state management
 
 ## 📞 Support
 
-- 📖 [Documentation](https://github.com/AIEPhoenix/aie-nextjs-electron-template/wiki)
-- 🐛 [Report Issues](https://github.com/AIEPhoenix/aie-nextjs-electron-template/issues)
-- 💬 [Discussions](https://github.com/AIEPhoenix/aie-nextjs-electron-template/discussions)
+- 🐛 [Report Issues](https://github.com/deepaste-ai/deepict/issues)
+- 💬 [Discussions](https://github.com/deepaste-ai/deepict/discussions)
+- 📖 [Documentation](https://github.com/deepaste-ai/deepict/wiki)
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/AIEPhoenix">AIEPhoenix</a></p>
-  <p>⭐ Star this repository if it helped you!</p>
+    <p>Made with ❤️ by <a href="https://github.com/AIEPhoenix">AIEPhoenix</a> & <a href="https://github.com/pandazki">Pandazki</a></p>
+  <p>⭐ Star this repository if Deepict helped you visualize your data!</p>
 </div>
