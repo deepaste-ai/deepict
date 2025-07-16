@@ -1,0 +1,146 @@
+{
+  "name": "deepict",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/main.js",
+  "build": {
+    "asar": true,
+    "executableName": "Deepict",
+    "appId": "app.deepict.deepaste.ai",
+    "icon": "build-assets/icon.png",
+    "files": [
+      "build",
+      "build-assets/icon.png",
+      {
+        "from": ".next/standalone",
+        "to": "app",
+        "filter": [
+          "!**/.env",
+          "!**/package.json"
+        ]
+      },
+      {
+        "from": ".next/static",
+        "to": "app/.next/static"
+      },
+      {
+        "from": "public",
+        "to": "app/public"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build-assets/icon.png"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build-assets/icon.png",
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "target": [
+        "deb"
+      ],
+      "icon": "build-assets/icon.png",
+      "category": "Development"
+    }
+  },
+  "scripts": {
+    "next:dev": "next dev",
+    "next:build": "next build",
+    "next:start": "next start",
+    "next:lint": "next lint",
+    "format": "dprint fmt",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
+    "postinstall": "electron-builder install-app-deps",
+    "electron:build_watch": "tsup --watch",
+    "electron:watch": "cross-env NODE_ENV='development' nodemon",
+    "electron:dev": "run-p electron:build_watch electron:watch",
+    "electron:build": "tsup",
+    "electron:dist": "electron-builder --dir",
+    "electron:dist:nsis": "electron-builder --windows nsis",
+    "electron:dist:deb": "electron-builder --linux deb",
+    "dev": "run-p next:dev electron:dev",
+    "build": "run-s next:build electron:build",
+    "dist": "run-s build electron:dist",
+    "dist:nsis": "run-s build electron:dist:nsis",
+    "dist:deb": "run-s build electron:dist:deb"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/serialize": "^1.3.3",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.14.1",
+    "@emotion/utils": "^1.4.2",
+    "@hono/zod-validator": "^0.7.1",
+    "@mantine/code-highlight": "^8.1.3",
+    "@mantine/core": "^8.1.3",
+    "@mantine/dropzone": "^8.1.3",
+    "@mantine/emotion": "^8.1.3",
+    "@mantine/form": "^8.1.3",
+    "@mantine/hooks": "^8.1.3",
+    "@mantine/modals": "^8.1.3",
+    "@mantine/notifications": "^8.1.3",
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@mui/material": "^7.2.0",
+    "@tabler/icons-react": "^3.34.0",
+    "@textea/json-viewer": "^4.0.1",
+    "ai": "^4.3.19",
+    "dedent": "^1.6.0",
+    "get-port-please": "^3.1.2",
+    "hono": "^4.8.5",
+    "next": "15.3.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "shiki": "^3.7.0",
+    "zod": "^4.0.5",
+    "zustand": "^5.0.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@iconify/json": "^2.2.357",
+    "@iconify/tailwind4": "^1.0.6",
+    "@svgr/webpack": "^8.1.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
+    "dprint": "^0.50.1",
+    "electron": "^37.2.1",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.5",
+    "eslint-config-prettier": "^10.1.5",
+    "nodemon": "^3.1.10",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "prettier": "3.6.2",
+    "sass-embedded": "^1.89.2",
+    "tailwindcss": "^4",
+    "tsup": "^8.5.0",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.7.1",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tailwindcss/oxide",
+      "dprint",
+      "electron",
+      "electron-winstaller",
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
+}

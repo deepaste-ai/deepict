@@ -1,0 +1,10 @@
+@layer theme, base, mantine, components, utilities;
+@import "@mantine/core/styles.layer.css";
+@import "@mantine/code-highlight/styles.layer.css";
+@import "@mantine/notifications/styles.layer.css";
+@import "@mantine/dropzone/styles.layer.css";
+
+@import "tailwindcss";
+@plugin "@iconify/tailwind4";
+@custom-variant dark (&:where([data-mantine-color-scheme=dark],
+  [data-mantine-color-scheme=dark] *));
