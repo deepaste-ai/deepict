@@ -1,4 +1,4 @@
-# Next.js + Electron Template
+# Deepict - AI-Powered JSON Visualization Tool
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -6,7 +6,38 @@
 [![Mantine](https://img.shields.io/badge/Mantine-339AF0?style=for-the-badge&logo=mantine&logoColor=white)](https://mantine.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-> A modern, production-ready template for building cross-platform desktop applications with Next.js and Electron.
+> 🚀 **Deepict** 是一个基于 AI 的 JSON 数据可视化工具，让复杂的 JSON 数据变得直观易懂。通过智能分析和美观的可视化界面，帮助开发者快速理解和分析数据结构。
+
+## 🎥 产品演示
+
+<video width="100%" controls>
+  <source src="demo.mp4" type="video/mp4">
+  <p>您的浏览器不支持视频播放。<a href="demo.mp4">点击此处下载视频</a></p>
+</video>
+
+*👆 观看 Deepict 的完整功能演示*
+
+## 🌟 核心特性
+
+- **🤖 AI 智能分析** - 使用 Claude AI 自动分析 JSON 数据结构并生成最佳可视化方案
+- **📊 多种可视化** - 支持表格、图表、树状图等多种数据展示方式
+- **🎨 美观界面** - 现代化的深色主题设计，符合苹果设计标准
+- **📁 文件支持** - 支持 JSON 和 JSONL 文件格式的拖拽上传
+- **💬 智能对话** - 通过聊天界面与 AI 交互，定制化数据可视化需求
+- **🔍 数据搜索** - 快速搜索和筛选 JSON 数据中的特定内容
+- **🖥️ 桌面应用** - 跨平台桌面应用，支持 Windows、macOS 和 Linux
+
+## 🎯 使用场景
+
+- **API 开发调试** - 快速查看和分析 API 响应数据
+- **数据分析** - 将复杂的 JSON 数据转换为直观的可视化图表
+- **日志分析** - 分析 JSONL 格式的日志文件
+- **配置文件查看** - 可视化查看和编辑配置文件
+- **数据迁移** - 验证和分析数据迁移过程中的 JSON 格式
+
+---
+
+## 🛠️ 技术架构
 
 [🇨🇳 中文版](./README_CN.md)
 
