@@ -1,4 +1,4 @@
-# Deepict - AI-Powered JSON Visualization Tool [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://github.com/deepaste-ai/deepict)
+# Deepict - AI-Powered JSON Visualization Tool [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/deepaste-ai/deepict)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
