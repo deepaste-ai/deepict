@@ -69,7 +69,15 @@
     "build": "run-s next:build electron:build",
     "dist": "run-s build electron:dist",
     "dist:nsis": "run-s build electron:dist:nsis",
-    "dist:deb": "run-s build electron:dist:deb"
+    "dist:deb": "run-s build electron:dist:deb",
+    "web:dev": "cross-env DEPLOYMENT_TARGET=web next dev",
+    "web:build": "cross-env DEPLOYMENT_TARGET=web next build",
+    "web:start": "cross-env DEPLOYMENT_TARGET=web next start",
+    "web:build:config": "cp next.config.web.ts next.config.ts && pnpm web:build",
+    "docker:build": "docker build -t deepict:latest .",
+    "docker:run": "docker run -p 3000:3000 deepict:latest",
+    "docker:dev": "docker-compose up --build",
+    "docker:prod": "docker-compose -f docker-compose.yml up -d"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.12",

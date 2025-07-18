@@ -1,8 +1,8 @@
-"use client";
-import { useAppStore } from "@/stores/useAppStore";
-import { Text } from "@mantine/core";
-import { Dropzone, DropzoneProps } from "@mantine/dropzone";
-import { notifications } from "@mantine/notifications";
+'use client';
+import { useAppStore } from '@/stores/useAppStore';
+import { Text } from '@mantine/core';
+import { Dropzone, DropzoneProps } from '@mantine/dropzone';
+import { notifications } from '@mantine/notifications';
 
 interface FileDropzoneProps extends Partial<DropzoneProps> {
   children: React.ReactNode;
@@ -15,47 +15,47 @@ export function FileDropzone({ children, ...props }: FileDropzoneProps) {
     const file = files[0];
     if (!file) return;
 
-    const allowedFileTypes = ["application/json", "application/jsonl"];
+    const allowedFileTypes = ['application/json', 'application/jsonl'];
     if (!allowedFileTypes.includes(file.type)) {
       notifications.show({
-        title: "Invalid file type",
-        message: "Please upload a JSON or JSONL file",
-        color: "red",
+        title: 'Invalid file type',
+        message: 'Please upload a JSON or JSONL file',
+        color: 'red',
       });
       return;
     }
 
-    console.log("file", file);
+    console.log('file', file);
 
     // Check file type
     const fileName = file.name.toLowerCase();
-    const isJsonl = fileName.endsWith(".jsonl");
-    const isJson = fileName.endsWith(".json");
+    const isJsonl = fileName.endsWith('.jsonl');
+    const isJson = fileName.endsWith('.json');
 
     if (!isJsonl && !isJson) {
       notifications.show({
-        title: "Invalid file type",
-        message: "Please upload a JSON or JSONL file",
-        color: "red",
+        title: 'Invalid file type',
+        message: 'Please upload a JSON or JSONL file',
+        color: 'red',
       });
       return;
     }
 
     try {
       const text = await file.text();
-      await processFile(text, isJsonl ? "jsonl" : "json", file.name, file.size);
+      await processFile(text, isJsonl ? 'jsonl' : 'json', file.name, file.size);
 
       notifications.show({
-        title: "File processed successfully",
+        title: 'File processed successfully',
         message: `${file.name} has been loaded`,
-        color: "green",
+        color: 'green',
       });
     } catch (error) {
-      console.error("Error processing file:", error);
+      console.error('Error processing file:', error);
       notifications.show({
-        title: "Error processing file",
-        message: "Failed to parse the uploaded file. Please check the file format.",
-        color: "red",
+        title: 'Error processing file',
+        message: 'Failed to parse the uploaded file. Please check the file format.',
+        color: 'red',
       });
     }
   };
@@ -67,14 +67,14 @@ export function FileDropzone({ children, ...props }: FileDropzoneProps) {
       activateOnKeyboard={false}
       styles={{
         root: {
-          border: "none",
-          backgroundColor: "transparent",
+          border: 'none',
+          backgroundColor: 'transparent',
           padding: 0,
         },
         inner: {
-          pointerEvents: "none",
-          width: "100%",
-          height: "100%",
+          pointerEvents: 'none',
+          width: '100%',
+          height: '100%',
         },
       }}
       {...props}

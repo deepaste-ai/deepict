@@ -68,6 +68,42 @@ https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
 | **Build Tool**      | tsup                          | TypeScript bundler for Electron    |
 | **Code Quality**    | ESLint + dprint               | Linting and formatting             |
 
+## 🚀 Deployment Options
+
+Deepict now supports multiple deployment methods:
+
+### 📱 Web Deployment (New!)
+Deploy as a web application accessible through browsers:
+
+```bash
+# Quick web deployment
+pnpm web:build
+pnpm web:start
+```
+
+### 🐳 Docker Deployment (New!)
+Containerized deployment for easy scaling:
+
+```bash
+# Using Docker Compose
+docker-compose up -d
+
+# Or manual Docker build
+docker build -t deepict:latest .
+docker run -p 3000:3000 deepict:latest
+```
+
+### 🖥️ Desktop Application (Original)
+Cross-platform desktop application:
+
+```bash
+# Development
+pnpm dev
+
+# Production build
+pnpm build && pnpm dist
+```
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -75,6 +111,7 @@ https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
 - Node.js 18+
 - pnpm 8+
 - Anthropic API Key (for AI features)
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
@@ -86,46 +123,84 @@ cd deepict
 # Install dependencies
 pnpm install
 
-# Start development server
+# Choose your deployment method:
+
+# 1. Desktop Development (original)
 pnpm dev
+
+# 2. Web Development
+pnpm web:dev
+
+# 3. Docker Development
+docker-compose up --build
 ```
 
 ### Setup API Key
 
-1. Launch the application
-2. Click the settings button in the AI chat panel
-3. Enter your Anthropic API Key
-4. Start using AI-powered visualization features
+1. Create environment file:
+   ```bash
+   cp .env.example .env.local
+   ```
 
-The application will launch with:
+2. Add your Anthropic API Key:
+   ```env
+   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   ```
 
-- Next.js dev server at `http://localhost:3000`
-- Electron app window with hot reload enabled
+3. Or configure via the application settings UI
+
+### Deployment Targets
+
+- **Desktop**: Electron app with native OS integration
+- **Web**: Browser-based application with PWA support
+- **Docker**: Containerized deployment for cloud platforms
 
 ## 📜 Available Scripts
 
 ### Development
 
 ```bash
+# Desktop Development (Electron)
 pnpm dev          # Start both Next.js and Electron in development
 pnpm next:dev     # Start Next.js development server only
 pnpm electron:dev # Start Electron with hot reload only
+
+# Web Development
+pnpm web:dev      # Start web development server
+pnpm web:build    # Build for web deployment
+pnpm web:start    # Start web production server
+
+# Docker Development
+pnpm docker:dev   # Start with Docker Compose
+pnpm docker:build # Build Docker image
+pnpm docker:run   # Run Docker container
 ```
 
-### Building
+### Building & Distribution
 
 ```bash
-pnpm build        # Build for production
-pnpm next:build   # Build Next.js only
-pnpm electron:build # Build Electron main process only
-```
-
-### Distribution
-
-```bash
+# Desktop Distribution
+pnpm build        # Build for production (Electron)
 pnpm dist         # Create distribution package
 pnpm dist:nsis    # Create Windows installer (NSIS)
 pnpm dist:deb     # Create Linux package (DEB)
+
+# Web Distribution
+pnpm web:build    # Build for web deployment
+pnpm web:start    # Start web production server
+
+# Docker Distribution
+pnpm docker:build # Build Docker image
+pnpm docker:prod  # Run production Docker container
+```
+
+### Automated Deployment
+
+```bash
+# Use deployment script for automated builds
+./scripts/deploy.sh -t web              # Web deployment
+./scripts/deploy.sh -t electron         # Electron deployment
+./scripts/deploy.sh -t docker -d v1.0.0 # Docker deployment
 ```
 
 ### Code Quality

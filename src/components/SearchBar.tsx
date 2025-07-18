@@ -1,12 +1,12 @@
-"use client";
-import { useAppStore } from "@/stores/useAppStore";
-import { ActionIcon, TextInput } from "@mantine/core";
+'use client';
+import { useAppStore } from '@/stores/useAppStore';
+import { ActionIcon, TextInput } from '@mantine/core';
 
 export function SearchBar() {
   const { searchQuery, setSearchQuery, setShowSearchBar } = useAppStore();
 
   const handleClear = () => {
-    setSearchQuery("");
+    setSearchQuery('');
     setShowSearchBar(false);
   };
 
@@ -32,9 +32,9 @@ export function SearchBar() {
         className="shadow-sm"
         styles={{
           input: {
-            borderColor: "#e5e7eb",
-            "&:focus": {
-              borderColor: "#3b82f6",
+            borderColor: '#e5e7eb',
+            '&:focus': {
+              borderColor: '#3b82f6',
             },
           },
         }}

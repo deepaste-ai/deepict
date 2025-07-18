@@ -1,4 +1,4 @@
-import { EventSourceMessage, fetchEventSource } from "@microsoft/fetch-event-source";
+import { EventSourceMessage, fetchEventSource } from '@microsoft/fetch-event-source';
 
 export class SSEError extends Error {}
 
@@ -19,12 +19,12 @@ export function streamCallHTMLComponentGenerator(
     onClose: () => void;
     onError: (err: unknown) => number | null | undefined | void;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ) {
-  return fetchEventSource("/fapi/gen-vis-comp", {
-    method: "POST",
+  return fetchEventSource('/fapi/gen-vis-comp', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(params),
     signal,
@@ -35,7 +35,7 @@ export function streamCallHTMLComponentGenerator(
         // Handle API key errors
         if (response.status === 400) {
           const errorData = await response.json();
-          throw new SSEFatalError(errorData.error || "API key configuration error");
+          throw new SSEFatalError(errorData.error || 'API key configuration error');
         }
         throw new SSEFatalError();
       } else {

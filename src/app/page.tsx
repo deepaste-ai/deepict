@@ -1,10 +1,10 @@
-"use client";
-import { AIChat } from "@/components/AIChat";
-import { FileDropzone } from "@/components/FileDropzone";
-import { JsonList } from "@/components/JsonList";
-import { JsonViewer } from "@/components/JsonViewer";
-import { SearchBar } from "@/components/SearchBar";
-import { useAppStore } from "@/stores/useAppStore";
+'use client';
+import { AIChat } from '@/components/AIChat';
+import { FileDropzone } from '@/components/FileDropzone';
+import { JsonList } from '@/components/JsonList';
+import { JsonViewer } from '@/components/JsonViewer';
+import { SearchBar } from '@/components/SearchBar';
+import { useAppStore } from '@/stores/useAppStore';
 
 export default function Home() {
   const { showSearchBar } = useAppStore();

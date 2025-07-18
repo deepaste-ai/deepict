@@ -1,12 +1,12 @@
-import { streamCallHTMLComponentGenerator } from "@/services/sse";
-import { generateChatMessage, parseJsonFile } from "@/utils/fileParser";
-import { create } from "zustand";
+import { streamCallHTMLComponentGenerator } from '@/services/sse';
+import { generateChatMessage, parseJsonFile } from '@/utils/fileParser';
+import { create } from 'zustand';
 
-export type DataType = "json" | "jsonl";
+export type DataType = 'json' | 'jsonl';
 
 export interface ChatMessage {
   id: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
 }
@@ -56,7 +56,7 @@ interface AppState {
   setShowSearchBar: (show: boolean) => void;
   setSearchQuery: (query: string) => void;
 
-  addChatMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
+  addChatMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   clearChatHistory: () => void;
   setIsAIProcessing: (processing: boolean) => void;
 
@@ -83,7 +83,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   jsonHTMLComponent: null,
 
   showSearchBar: false,
-  searchQuery: "",
+  searchQuery: '',
 
   chatMessages: [],
   isAIProcessing: false,
@@ -150,14 +150,14 @@ export const useAppStore = create<AppState>((set, get) => ({
         currentJsonId: parsedData[0]?.id || null,
         fileInfo: fileInfo,
         jsonHTMLComponent: null, // Reset HTML component when new file is loaded
-        showSearchBar: type === "jsonl" && parsedData.length > 1,
+        showSearchBar: type === 'jsonl' && parsedData.length > 1,
       });
 
       // Generate and send chat message
       const chatMessage = generateChatMessage(fileInfo);
       const state = get();
       state.addChatMessage({
-        role: "user",
+        role: 'user',
         content: chatMessage,
       });
 
@@ -167,8 +167,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         // Start HTML component generation
         state.setIsAIProcessing(true);
 
-        let accumulatedMessage = "";
-        let accumulatedHTML = "";
+        let accumulatedMessage = '';
+        let accumulatedHTML = '';
 
         await streamCallHTMLComponentGenerator(
           {
@@ -177,19 +177,19 @@ export const useAppStore = create<AppState>((set, get) => ({
           },
           {
             onOpen: async () => {
-              console.log("SSE connection opened");
+              console.log('SSE connection opened');
             },
             onMessage: (ev) => {
               try {
                 const data = JSON.parse(ev.data);
-                console.log("SSE message:", data.type === "resp", accumulatedMessage);
+                console.log('SSE message:', data.type === 'resp', accumulatedMessage);
                 switch (data.type) {
-                  case "resp":
+                  case 'resp':
                     accumulatedMessage += data.content;
                     // Update chat message with accumulated content
                     const messagesState = get();
                     const lastMessage = messagesState.chatMessages[messagesState.chatMessages.length - 1];
-                    if (lastMessage && lastMessage.role === "assistant") {
+                    if (lastMessage && lastMessage.role === 'assistant') {
                       // Update existing message
                       const updatedMessages = [...messagesState.chatMessages];
                       updatedMessages[updatedMessages.length - 1] = {
@@ -200,45 +200,45 @@ export const useAppStore = create<AppState>((set, get) => ({
                     } else {
                       // Add new assistant message
                       state.addChatMessage({
-                        role: "assistant",
+                        role: 'assistant',
                         content: accumulatedMessage,
                       });
                     }
                     break;
 
-                  case "html":
+                  case 'html':
                     accumulatedHTML += data.content;
                     // Update HTML component with accumulated HTML
                     state.setJsonHTMLComponent(accumulatedHTML);
                     break;
 
                   default:
-                    console.log("Unknown message type:", data.type);
+                    console.log('Unknown message type:', data.type);
                 }
               } catch (error) {
-                console.error("Error parsing SSE message:", error);
+                console.error('Error parsing SSE message:', error);
               }
             },
             onClose: () => {
-              console.log("SSE connection closed");
+              console.log('SSE connection closed');
               state.setIsAIProcessing(false);
             },
             onError: (err) => {
-              console.error("SSE error:", err);
+              console.error('SSE error:', err);
               state.setIsAIProcessing(false);
               // Show error message to user
-              if (err instanceof Error && err.message && err.message.includes("API key")) {
+              if (err instanceof Error && err.message && err.message.includes('API key')) {
                 state.addChatMessage({
-                  role: "assistant",
+                  role: 'assistant',
                   content: `Error: ${err.message}. Please check your API key configuration.`,
                 });
               }
             },
-          },
+          }
         );
       }
     } catch (error) {
-      console.error("Error processing file:", error);
+      console.error('Error processing file:', error);
       throw error;
     } finally {
       set({ isFileUploading: false });
@@ -253,8 +253,8 @@ export const useAppStore = create<AppState>((set, get) => ({
 
     set({ isAIProcessing: true });
 
-    let accumulatedMessage = "";
-    let accumulatedHTML = "";
+    let accumulatedMessage = '';
+    let accumulatedHTML = '';
 
     try {
       await streamCallHTMLComponentGenerator(
@@ -266,18 +266,18 @@ export const useAppStore = create<AppState>((set, get) => ({
         },
         {
           onOpen: async () => {
-            console.log("SSE connection opened");
+            console.log('SSE connection opened');
           },
           onMessage: (ev) => {
             try {
               const data = JSON.parse(ev.data);
               switch (data.type) {
-                case "resp":
+                case 'resp':
                   accumulatedMessage += data.content;
                   // Update chat message with accumulated content
                   const messagesState = get();
                   const lastMessage = messagesState.chatMessages[messagesState.chatMessages.length - 1];
-                  if (lastMessage && lastMessage.role === "assistant") {
+                  if (lastMessage && lastMessage.role === 'assistant') {
                     // Update existing message
                     const updatedMessages = [...messagesState.chatMessages];
                     updatedMessages[updatedMessages.length - 1] = {
@@ -288,44 +288,44 @@ export const useAppStore = create<AppState>((set, get) => ({
                   } else {
                     // Add new assistant message
                     state.addChatMessage({
-                      role: "assistant",
+                      role: 'assistant',
                       content: accumulatedMessage,
                     });
                   }
                   break;
 
-                case "html":
+                case 'html':
                   accumulatedHTML += data.content;
                   // Update HTML component with accumulated HTML
                   state.setJsonHTMLComponent(accumulatedHTML);
                   break;
 
                 default:
-                  console.log("Unknown message type:", data.type);
+                  console.log('Unknown message type:', data.type);
               }
             } catch (error) {
-              console.error("Error parsing SSE message:", error);
+              console.error('Error parsing SSE message:', error);
             }
           },
           onClose: () => {
-            console.log("SSE connection closed");
+            console.log('SSE connection closed');
             set({ isAIProcessing: false });
           },
           onError: (err) => {
-            console.error("SSE error:", err);
+            console.error('SSE error:', err);
             set({ isAIProcessing: false });
             // Show error message to user
-            if (err instanceof Error && err.message && err.message.includes("API key")) {
+            if (err instanceof Error && err.message && err.message.includes('API key')) {
               state.addChatMessage({
-                role: "assistant",
+                role: 'assistant',
                 content: `Error: ${err.message}. Please check your API key configuration.`,
               });
             }
           },
-        },
+        }
       );
     } catch (error) {
-      console.error("Error generating HTML component:", error);
+      console.error('Error generating HTML component:', error);
       set({ isAIProcessing: false });
     }
   },
@@ -353,8 +353,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   setShowSettings: (show) => set({ showSettings: show }),
 
   loadSettings: () => {
-    if (typeof window !== "undefined") {
-      const savedApiKey = localStorage.getItem("anthropic_api_key");
+    if (typeof window !== 'undefined') {
+      const savedApiKey = localStorage.getItem('anthropic_api_key');
       if (savedApiKey) {
         set({ apiKey: savedApiKey });
       }
@@ -362,12 +362,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   saveSettings: () => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const state = get();
       if (state.apiKey) {
-        localStorage.setItem("anthropic_api_key", state.apiKey);
+        localStorage.setItem('anthropic_api_key', state.apiKey);
       } else {
-        localStorage.removeItem("anthropic_api_key");
+        localStorage.removeItem('anthropic_api_key');
       }
     }
   },

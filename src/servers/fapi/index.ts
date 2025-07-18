@@ -1,18 +1,18 @@
-import "server-only";
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { zValidator } from "@hono/zod-validator";
-import { streamText } from "ai";
-import dedent from "dedent";
-import { Hono } from "hono";
-import { except } from "hono/combine";
-import { compress } from "hono/compress";
-import { cors } from "hono/cors";
-import { logger } from "hono/logger";
-import { streamSSE } from "hono/streaming";
-import { z } from "zod/v4";
+import 'server-only';
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { zValidator } from '@hono/zod-validator';
+import { streamText } from 'ai';
+import dedent from 'dedent';
+import { Hono } from 'hono';
+import { except } from 'hono/combine';
+import { compress } from 'hono/compress';
+import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
+import { streamSSE } from 'hono/streaming';
+import { z } from 'zod/v4';
 
 /** FAPI服务器实例，基础路径为 /fapi */
-const fapiServer = new Hono().basePath("/fapi");
+const fapiServer = new Hono().basePath('/fapi');
 // === 中间件配置 ===
 
 /** 请求日志中间件 */
@@ -23,10 +23,10 @@ fapiServer.use(logger());
  * 对于Server-Sent Events，不能启用压缩，因为需要实时传输
  */
 fapiServer.use(
-  "*",
+  '*',
   except((c) => {
-    return c.req.header().accept?.includes("text/event-stream");
-  }, compress()),
+    return c.req.header().accept?.includes('text/event-stream');
+  }, compress())
 );
 
 /**
@@ -34,38 +34,38 @@ fapiServer.use(
  * 配置为允许所有来源，适用于开发环境
  */
 fapiServer.use(
-  "*",
+  '*',
   cors({
-    origin: (origin) => origin || "*",
-    allowHeaders: ["*"],
-    exposeHeaders: ["*"],
+    origin: (origin) => origin || '*',
+    allowHeaders: ['*'],
+    exposeHeaders: ['*'],
     credentials: true,
-  }),
+  })
 );
 
 fapiServer.post(
-  "/gen-vis-comp",
+  '/gen-vis-comp',
   zValidator(
-    "json",
+    'json',
     z.object({
       prevHTML: z.string().optional(),
       json: z.string(),
       userInput: z.string().optional(),
       apiKey: z.string().optional(),
-    }),
+    })
   ),
   async (c) => {
-    const { prevHTML, json, userInput, apiKey: requestApiKey } = c.req.valid("json");
+    const { prevHTML, json, userInput, apiKey: requestApiKey } = c.req.valid('json');
 
     const apiKey = requestApiKey || process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-      return c.json({ error: "API key is required. Please configure your Anthropic API key in settings." }, 400);
+      return c.json({ error: 'API key is required. Please configure your Anthropic API key in settings.' }, 400);
     }
 
     const anthropic = createAnthropic({
       apiKey,
     });
-    const model = anthropic("claude-4-sonnet-20250514");
+    const model = anthropic('claude-4-sonnet-20250514');
 
     const abortController = new AbortController();
     const { signal: abortSignal } = abortController;
@@ -79,8 +79,8 @@ fapiServer.post(
           if (!userInput) {
             await stream.writeSSE({
               data: JSON.stringify({
-                type: "resp",
-                content: "Received new JSON data, generating first visualization component...\n",
+                type: 'resp',
+                content: 'Received new JSON data, generating first visualization component...\n',
               }),
             });
           }
@@ -106,10 +106,10 @@ fapiServer.post(
             ${JSON.stringify(JSON.parse(json), null, 4)}
 
             上一个版本生成的HTML:
-            ${prevHTML ? `${prevHTML}` : "无"}
+            ${prevHTML ? `${prevHTML}` : '无'}
 
             请根据上面的JSON和之前版本生成的HTML${
-              userInput ? `并根据用户的需求: ${userInput}` : ""
+              userInput ? `并根据用户的需求: ${userInput}` : ''
             }产生一个用于渲染这个JSON的可视化HTML组件。
             !!!注意!!!仅返回给我生成的HTML即可，不要用markdown的block包裹
             声明渲染JSON的地方请使用特殊的占位符 我会在后续通过替换将实际要渲染的JSON替换进去 请遵循这样的结构: const renderJSON = {†RENDER_JSON†}
@@ -120,48 +120,48 @@ fapiServer.post(
           });
           for await (const part of result.fullStream) {
             switch (part.type) {
-              case "text-delta": {
+              case 'text-delta': {
                 // handle text delta here
                 await stream.writeSSE({
                   data: JSON.stringify({
-                    type: "html",
+                    type: 'html',
                     content: part.textDelta,
                   }),
                 });
                 break;
               }
-              case "reasoning": {
+              case 'reasoning': {
                 // handle reasoning here
                 break;
               }
-              case "finish": {
+              case 'finish': {
                 // handle finish here
                 break;
               }
-              case "error": {
+              case 'error': {
                 throw part.error;
               }
             }
           }
           await stream.writeSSE({
             data: JSON.stringify({
-              type: "resp",
+              type: 'resp',
               content: `Done. New component generated.`,
             }),
           });
         } catch (err: unknown) {
           console.error(err);
           await stream.writeSSE({
-            event: "error",
-            data: (err as Error)?.message || "Unknow Error",
+            event: 'error',
+            data: (err as Error)?.message || 'Unknow Error',
           });
         }
       },
       async (err) => {
         console.error(err);
-      },
+      }
     );
-  },
+  }
 );
 
 export default fapiServer;
