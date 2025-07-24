@@ -80,13 +80,13 @@ export function FileDropzone({ children, ...props }: FileDropzoneProps) {
       {...props}
     >
       <Dropzone.Accept>
-        <div className="fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 bg-opacity-95 flex items-center justify-center z-50 border-2 border-dashed border-blue-400 backdrop-blur-sm">
-          <div className="text-center p-8 bg-white rounded-2xl shadow-xl border border-blue-200">
-            <span className="icon-[mdi--file-upload] w-20 h-20 text-blue-500 mx-auto mb-6 block animate-bounce" />
-            <Text size="xl" fw={600} c="blue" className="mb-3">
+        <div className='fixed inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 bg-opacity-95 flex items-center justify-center z-50 border-2 border-dashed border-blue-400 backdrop-blur-sm'>
+          <div className='text-center p-8 bg-white rounded-2xl shadow-xl border border-blue-200'>
+            <span className='icon-[mdi--file-upload] w-20 h-20 text-blue-500 mx-auto mb-6 block animate-bounce' />
+            <Text size='xl' fw={600} c='blue' className='mb-3'>
               Drop JSON or JSONL files here
             </Text>
-            <Text size="sm" c="dimmed" className="max-w-xs mx-auto leading-relaxed">
+            <Text size='sm' c='dimmed' className='max-w-xs mx-auto leading-relaxed'>
               Files will be automatically processed
             </Text>
           </div>
@@ -94,13 +94,13 @@ export function FileDropzone({ children, ...props }: FileDropzoneProps) {
       </Dropzone.Accept>
 
       <Dropzone.Reject>
-        <div className="fixed inset-0 bg-gradient-to-br from-red-50 to-pink-50 bg-opacity-95 flex items-center justify-center z-50 border-2 border-dashed border-red-400 backdrop-blur-sm">
-          <div className="text-center p-8 bg-white rounded-2xl shadow-xl border border-red-200">
-            <span className="icon-[mdi--file-cancel] w-20 h-20 text-red-500 mx-auto mb-6 block animate-pulse" />
-            <Text size="xl" fw={600} c="red" className="mb-3">
+        <div className='fixed inset-0 bg-gradient-to-br from-red-50 to-pink-50 bg-opacity-95 flex items-center justify-center z-50 border-2 border-dashed border-red-400 backdrop-blur-sm'>
+          <div className='text-center p-8 bg-white rounded-2xl shadow-xl border border-red-200'>
+            <span className='icon-[mdi--file-cancel] w-20 h-20 text-red-500 mx-auto mb-6 block animate-pulse' />
+            <Text size='xl' fw={600} c='red' className='mb-3'>
               Invalid file type
             </Text>
-            <Text size="sm" c="dimmed" className="max-w-xs mx-auto leading-relaxed">
+            <Text size='sm' c='dimmed' className='max-w-xs mx-auto leading-relaxed'>
               Please upload JSON or JSONL files only
             </Text>
           </div>

@@ -9,11 +9,13 @@ This guide covers multiple deployment options for Deepict, including web deploym
 Deploy Deepict as a web application that can be accessed through browsers.
 
 #### Prerequisites
+
 - Node.js 18+
 - pnpm package manager
 - Anthropic API key
 
 #### Quick Start
+
 ```bash
 # Install dependencies
 pnpm install
@@ -26,6 +28,7 @@ pnpm web:start
 ```
 
 #### Environment Configuration
+
 1. Copy the environment template:
    ```bash
    cp .env.example .env.local
@@ -40,6 +43,7 @@ pnpm web:start
    ```
 
 #### Production Deployment
+
 The web build creates a standalone Next.js application in `.next/standalone/` that can be deployed to any Node.js hosting platform:
 
 - **Vercel**: Simply connect your repository
@@ -52,6 +56,7 @@ The web build creates a standalone Next.js application in `.next/standalone/` th
 Containerized deployment for easy scaling and management.
 
 #### Using Docker Compose (Recommended)
+
 ```bash
 # Start with Docker Compose
 docker-compose up -d
@@ -61,6 +66,7 @@ docker-compose up --build
 ```
 
 #### Manual Docker Build
+
 ```bash
 # Build the image
 docker build -t deepict:latest .
@@ -72,7 +78,9 @@ docker run -p 3000:3000 \
 ```
 
 #### Docker Configuration
+
 The Docker setup includes:
+
 - Multi-stage build for optimal image size
 - Non-root user for security
 - Health checks for monitoring
@@ -100,23 +108,25 @@ pnpm dist:deb      # Linux package
 
 ### Environment Variables
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `DEPLOYMENT_TARGET` | Deployment target (`web` or `electron`) | `web` | No |
-| `ANTHROPIC_API_KEY` | Anthropic Claude API key | - | Yes |
-| `NODE_ENV` | Node.js environment | `development` | No |
-| `PORT` | Server port | `3000` | No |
-| `HOSTNAME` | Server hostname | `0.0.0.0` | No |
+| Variable            | Description                             | Default       | Required |
+| ------------------- | --------------------------------------- | ------------- | -------- |
+| `DEPLOYMENT_TARGET` | Deployment target (`web` or `electron`) | `web`         | No       |
+| `ANTHROPIC_API_KEY` | Anthropic Claude API key                | -             | Yes      |
+| `NODE_ENV`          | Node.js environment                     | `development` | No       |
+| `PORT`              | Server port                             | `3000`        | No       |
+| `HOSTNAME`          | Server hostname                         | `0.0.0.0`     | No       |
 
 ### Platform Detection
 
 The application automatically detects the deployment environment:
+
 - **Electron**: Full desktop features enabled
 - **Web**: Browser-compatible features only
 
 ### Security Configuration
 
 Web deployment includes additional security headers:
+
 - X-Frame-Options: DENY
 - X-Content-Type-Options: nosniff
 - X-XSS-Protection: 1; mode=block
@@ -144,26 +154,28 @@ Use the provided deployment script for automated builds:
 
 ### Script Options
 
-| Option | Description |
-|--------|-------------|
-| `-t, --target` | Deployment target: `web`, `electron`, or `docker` |
-| `-s, --skip-tests` | Skip running tests |
-| `-l, --skip-lint` | Skip linting |
-| `-d, --docker-tag` | Docker tag (default: latest) |
-| `-p, --push` | Push Docker image to registry |
-| `-r, --registry` | Docker registry URL |
+| Option             | Description                                       |
+| ------------------ | ------------------------------------------------- |
+| `-t, --target`     | Deployment target: `web`, `electron`, or `docker` |
+| `-s, --skip-tests` | Skip running tests                                |
+| `-l, --skip-lint`  | Skip linting                                      |
+| `-d, --docker-tag` | Docker tag (default: latest)                      |
+| `-p, --push`       | Push Docker image to registry                     |
+| `-r, --registry`   | Docker registry URL                               |
 
 ## 🏗️ Architecture Changes
 
 ### Platform-Specific Features
 
 #### Web Deployment
+
 - Progressive Web App (PWA) support
 - Service Worker for offline functionality
 - Web-optimized file handling
 - Browser security constraints
 
 #### Electron Deployment
+
 - Native file system access
 - Desktop notifications
 - System tray integration
@@ -172,6 +184,7 @@ Use the provided deployment script for automated builds:
 ### Shared Components
 
 Both deployments share:
+
 - Next.js application core
 - React components
 - API endpoints
@@ -203,6 +216,7 @@ The application provides a health check endpoint at `/api/health`:
 ### Docker Health Checks
 
 Docker containers include built-in health checks:
+
 - Endpoint: `curl -f http://localhost:3000/api/health`
 - Interval: 30 seconds
 - Timeout: 10 seconds
@@ -213,24 +227,30 @@ Docker containers include built-in health checks:
 ### Common Issues
 
 #### 1. API Key Configuration
+
 **Problem**: AI features not working
 **Solution**: Ensure `ANTHROPIC_API_KEY` is properly set in environment variables
 
 #### 2. Port Conflicts
+
 **Problem**: Port 3000 already in use
 **Solution**: Set `PORT` environment variable to a different port
 
 #### 3. Docker Build Failures
+
 **Problem**: Docker build fails with dependency errors
 **Solution**: Clear Docker cache and rebuild:
+
 ```bash
 docker system prune -a
 docker build --no-cache -t deepict:latest .
 ```
 
 #### 4. Memory Issues
+
 **Problem**: Application crashes with out-of-memory errors
 **Solution**: Increase container memory limits:
+
 ```bash
 docker run -m 2g -p 3000:3000 deepict:latest
 ```
@@ -238,6 +258,7 @@ docker run -m 2g -p 3000:3000 deepict:latest
 ### Debug Mode
 
 Enable debug logging by setting:
+
 ```env
 NODE_ENV=development
 NEXT_PUBLIC_DEBUG=true
@@ -246,6 +267,7 @@ NEXT_PUBLIC_DEBUG=true
 ## 📊 Performance Optimization
 
 ### Web Deployment
+
 - Static asset optimization
 - Image compression
 - Code splitting
@@ -253,6 +275,7 @@ NEXT_PUBLIC_DEBUG=true
 - Caching strategies
 
 ### Docker Deployment
+
 - Multi-stage builds
 - Layer caching
 - Minimal base images
@@ -277,7 +300,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
       - run: npm install -g pnpm
       - run: pnpm install
       - run: ./scripts/deploy.sh -t docker -d ${{ github.sha }}
@@ -286,12 +309,14 @@ jobs:
 ## 🌐 Scaling Considerations
 
 ### Horizontal Scaling
+
 - Stateless application design
 - Load balancer configuration
 - Database considerations
 - Session management
 
 ### Vertical Scaling
+
 - Memory optimization
 - CPU utilization
 - I/O performance
@@ -326,6 +351,7 @@ jobs:
 ## 🔐 Security Best Practices
 
 ### Web Deployment
+
 - Environment variable security
 - HTTPS enforcement
 - Content Security Policy
@@ -333,6 +359,7 @@ jobs:
 - Input validation
 
 ### Docker Deployment
+
 - Non-root user execution
 - Minimal base images
 - Security scanning
@@ -342,6 +369,7 @@ jobs:
 ## 📈 Monitoring and Observability
 
 ### Metrics Collection
+
 - Application performance
 - Error rates
 - User interactions
@@ -349,6 +377,7 @@ jobs:
 - API response times
 
 ### Logging
+
 - Structured logging
 - Error tracking
 - Performance monitoring
@@ -358,6 +387,7 @@ jobs:
 ## 🆘 Support
 
 For deployment issues:
+
 1. Check the health endpoint: `/api/health`
 2. Review application logs
 3. Verify environment variables
@@ -367,6 +397,7 @@ For deployment issues:
 ## 📝 Changelog
 
 ### Version 0.1.0
+
 - ✅ Added web deployment support
 - ✅ Added Docker containerization
 - ✅ Added platform detection

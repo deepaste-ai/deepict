@@ -44,6 +44,8 @@ interface AppState {
 
   // Settings
   apiKey: string | null;
+  groqApiKey: string | null;
+  apiProvider: 'anthropic' | 'groq';
   showSettings: boolean;
 
   // Actions
@@ -65,6 +67,8 @@ interface AppState {
   generateHTMLComponent: (userInput?: string) => Promise<void>;
 
   setApiKey: (apiKey: string | null) => void;
+  setGroqApiKey: (apiKey: string | null) => void;
+  setApiProvider: (provider: 'anthropic' | 'groq') => void;
   setShowSettings: (show: boolean) => void;
   loadSettings: () => void;
   saveSettings: () => void;
@@ -91,6 +95,8 @@ export const useAppStore = create<AppState>((set, get) => ({
   isFileUploading: false,
 
   apiKey: null,
+  groqApiKey: null,
+  apiProvider: 'anthropic',
   showSettings: false,
 
   // Actions
@@ -173,7 +179,8 @@ export const useAppStore = create<AppState>((set, get) => ({
         await streamCallHTMLComponentGenerator(
           {
             json: JSON.stringify(parsedData[0]?.data || {}),
-            apiKey: get().apiKey || undefined,
+            apiKey: get().apiProvider === 'anthropic' ? (get().apiKey || undefined) : (get().groqApiKey || undefined),
+            apiProvider: get().apiProvider,
           },
           {
             onOpen: async () => {
@@ -234,7 +241,7 @@ export const useAppStore = create<AppState>((set, get) => ({
                 });
               }
             },
-          }
+          },
         );
       }
     } catch (error) {
@@ -262,7 +269,8 @@ export const useAppStore = create<AppState>((set, get) => ({
           prevHTML: state.jsonHTMLComponent || undefined,
           json: JSON.stringify(currentJson.data),
           userInput: userInput || `Generate a visualization component for this ${state.dataType?.toUpperCase()} data`,
-          apiKey: state.apiKey || undefined,
+          apiKey: state.apiProvider === 'anthropic' ? (state.apiKey || undefined) : (state.groqApiKey || undefined),
+          apiProvider: state.apiProvider,
         },
         {
           onOpen: async () => {
@@ -322,7 +330,7 @@ export const useAppStore = create<AppState>((set, get) => ({
               });
             }
           },
-        }
+        },
       );
     } catch (error) {
       console.error('Error generating HTML component:', error);
@@ -350,13 +358,32 @@ export const useAppStore = create<AppState>((set, get) => ({
     get().saveSettings();
   },
 
+  setGroqApiKey: (apiKey) => {
+    set({ groqApiKey: apiKey });
+    get().saveSettings();
+  },
+
+  setApiProvider: (provider) => {
+    set({ apiProvider: provider });
+    get().saveSettings();
+  },
+
   setShowSettings: (show) => set({ showSettings: show }),
 
   loadSettings: () => {
     if (typeof window !== 'undefined') {
       const savedApiKey = localStorage.getItem('anthropic_api_key');
+      const savedGroqApiKey = localStorage.getItem('groq_api_key');
+      const savedApiProvider = localStorage.getItem('api_provider') as 'anthropic' | 'groq' | null;
+
       if (savedApiKey) {
         set({ apiKey: savedApiKey });
+      }
+      if (savedGroqApiKey) {
+        set({ groqApiKey: savedGroqApiKey });
+      }
+      if (savedApiProvider) {
+        set({ apiProvider: savedApiProvider });
       }
     }
   },
@@ -364,11 +391,20 @@ export const useAppStore = create<AppState>((set, get) => ({
   saveSettings: () => {
     if (typeof window !== 'undefined') {
       const state = get();
+
       if (state.apiKey) {
         localStorage.setItem('anthropic_api_key', state.apiKey);
       } else {
         localStorage.removeItem('anthropic_api_key');
       }
+
+      if (state.groqApiKey) {
+        localStorage.setItem('groq_api_key', state.groqApiKey);
+      } else {
+        localStorage.removeItem('groq_api_key');
+      }
+
+      localStorage.setItem('api_provider', state.apiProvider);
     }
   },
 }));

@@ -27,18 +27,18 @@ export function JsonList() {
   };
 
   return (
-    <Paper withBorder className="h-full w-80 flex-shrink-0 mr-4 shadow-sm">
-      <div className="p-4 border-b bg-gray-50">
+    <Paper withBorder className='h-full w-80 flex-shrink-0 mr-4 shadow-sm'>
+      <div className='p-4 border-b bg-gray-50'>
         <Group>
-          <span className="icon-[mdi--file-code] w-4 h-4 text-blue-600" />
-          <Text fw={500} size="sm" c="dark">
+          <span className='icon-[mdi--file-code] w-4 h-4 text-blue-600' />
+          <Text fw={500} size='sm' c='dark'>
             JSON Lines ({jsonData.length})
           </Text>
         </Group>
       </div>
 
-      <ScrollArea className="h-[calc(100%-60px)]" scrollbarSize={6}>
-        <div className="p-3">
+      <ScrollArea className='h-[calc(100%-60px)]' scrollbarSize={6}>
+        <div className='p-3'>
           {jsonData.map((item, index) => (
             <UnstyledButton
               key={item.id}
@@ -49,19 +49,19 @@ export function JsonList() {
                   : 'hover:bg-gray-50 border border-gray-200 hover:border-gray-300 hover:shadow-sm'
               }`}
             >
-              <Group align="flex-start" wrap="nowrap" gap="sm">
+              <Group align='flex-start' wrap='nowrap' gap='sm'>
                 <span
                   className={`icon-[mdi--file-document] w-4 h-4 mt-1 flex-shrink-0 ${
                     currentJsonId === item.id ? 'text-blue-600' : 'text-gray-500'
                   }`}
                 />
-                <div className="flex-1 min-w-0">
-                  <Group justify="space-between" className="mb-1">
-                    <Text size="sm" fw={500} className="truncate" c={currentJsonId === item.id ? 'blue' : 'dark'}>
+                <div className='flex-1 min-w-0'>
+                  <Group justify='space-between' className='mb-1'>
+                    <Text size='sm' fw={500} className='truncate' c={currentJsonId === item.id ? 'blue' : 'dark'}>
                       Item {index + 1}
                     </Text>
                   </Group>
-                  <Text size="xs" c="dimmed" className="line-clamp-2 leading-relaxed">
+                  <Text size='xs' c='dimmed' className='line-clamp-2 leading-relaxed'>
                     {getPreviewText(item.data)}
                   </Text>
                 </div>

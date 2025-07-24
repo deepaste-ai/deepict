@@ -33,85 +33,87 @@ export function JsonViewer() {
 
   if (!currentJson) {
     return (
-      <Paper withBorder className="h-full flex-1 flex items-center justify-center shadow-sm">
-        <div className="text-center p-8">
-          {isFileUploading ? (
-            <>
-              <span className="icon-[mdi--loading] w-16 h-16 text-blue-500 mx-auto mb-6 block animate-spin" />
-              <Text size="lg" fw={500} c="blue" className="mb-2">
-                Processing file...
-              </Text>
-              <Text size="sm" c="dimmed">
-                Please wait while we parse your data
-              </Text>
-            </>
-          ) : (
-            <>
-              <span className="icon-[mdi--code-json] w-16 h-16 text-gray-400 mx-auto mb-6 block" />
-              <Text size="lg" fw={500} c="dimmed" className="mb-2">
-                No JSON data selected
-              </Text>
-              <Text size="sm" c="dimmed" className="max-w-md mx-auto leading-relaxed">
-                Drag and drop JSON or JSONL files here to get started, or use the attachment button in the chat
-              </Text>
-            </>
-          )}
+      <Paper withBorder className='h-full flex-1 flex items-center justify-center shadow-sm'>
+        <div className='text-center p-8'>
+          {isFileUploading
+            ? (
+              <>
+                <span className='icon-[mdi--loading] w-16 h-16 text-blue-500 mx-auto mb-6 block animate-spin' />
+                <Text size='lg' fw={500} c='blue' className='mb-2'>
+                  Processing file...
+                </Text>
+                <Text size='sm' c='dimmed'>
+                  Please wait while we parse your data
+                </Text>
+              </>
+            )
+            : (
+              <>
+                <span className='icon-[mdi--code-json] w-16 h-16 text-gray-400 mx-auto mb-6 block' />
+                <Text size='lg' fw={500} c='dimmed' className='mb-2'>
+                  No JSON data selected
+                </Text>
+                <Text size='sm' c='dimmed' className='max-w-md mx-auto leading-relaxed'>
+                  Drag and drop JSON or JSONL files here to get started, or use the attachment button in the chat
+                </Text>
+              </>
+            )}
         </div>
       </Paper>
     );
   }
 
   return (
-    <Paper withBorder className="h-full flex-1 flex flex-col w-full shadow-sm">
-      <div className="p-4 border-b bg-gray-50">
+    <Paper withBorder className='h-full flex-1 flex flex-col w-full shadow-sm'>
+      <div className='p-4 border-b bg-gray-50'>
         <Group>
-          <span className="icon-[mdi--code-json] w-4 h-4 text-green-600" />
-          <Text fw={500} size="sm">
+          <span className='icon-[mdi--code-json] w-4 h-4 text-green-600' />
+          <Text fw={500} size='sm'>
             Deepict Viewer
           </Text>
         </Group>
       </div>
 
-      <div className="flex-1 w-full overflow-hidden">
-        <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'preview')} className="h-full flex flex-col">
-          <Tabs.List className="px-4 pt-3 pb-1 bg-white border-b border-gray-100">
+      <div className='flex-1 w-full overflow-hidden'>
+        <Tabs value={activeTab} onChange={(value) => setActiveTab(value || 'preview')} className='h-full flex flex-col'>
+          <Tabs.List className='px-4 pt-3 pb-1 bg-white border-b border-gray-100'>
             {jsonHTMLComponent && (
               <Tabs.Tab
-                value="visualization"
-                leftSection={<span className="icon-[mdi--chart-line] w-4 h-4" />}
-                className="text-sm"
+                value='visualization'
+                leftSection={<span className='icon-[mdi--chart-line] w-4 h-4' />}
+                className='text-sm'
               >
                 Visualization
               </Tabs.Tab>
             )}
-            <Tabs.Tab value="preview" leftSection={<span className="icon-[mdi--eye] w-4 h-4" />} className="text-sm">
+            <Tabs.Tab value='preview' leftSection={<span className='icon-[mdi--eye] w-4 h-4' />} className='text-sm'>
               Preview
             </Tabs.Tab>
-            <Tabs.Tab value="code" leftSection={<span className="icon-[mdi--code-json] w-4 h-4" />} className="text-sm">
+            <Tabs.Tab value='code' leftSection={<span className='icon-[mdi--code-json] w-4 h-4' />} className='text-sm'>
               Raw JSON
             </Tabs.Tab>
           </Tabs.List>
 
           {jsonHTMLComponent && (
-            <Tabs.Panel value="visualization" className="flex-1 overflow-hidden">
-              <div className="h-full w-full">
+            <Tabs.Panel value='visualization' className='flex-1 overflow-hidden'>
+              <div className='h-full w-full'>
                 <iframe
                   srcDoc={jsonHTMLComponent.replace('{†RENDER_JSON†}', JSON.stringify(currentJson.data, null, 2))}
-                  className="w-full h-full border-0"
-                  sandbox="allow-scripts"
-                  title="JSON Visualization"
+                  className='w-full h-full border-0'
+                  sandbox='allow-scripts'
+                  title='JSON Visualization'
                 />
               </div>
             </Tabs.Panel>
           )}
 
-          <Tabs.Panel value="preview" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full" scrollbarSize={6}>
-              <div className="p-5">
-                <div className="bg-gray-50 rounded-lg p-4 border">
+          <Tabs.Panel value='preview' className='flex-1 overflow-hidden'>
+            <ScrollArea className='h-full' scrollbarSize={6}>
+              <div className='p-5'>
+                <div className='bg-gray-50 rounded-lg p-4 border'>
                   <TexteaJsonViewer
                     value={currentJson.data}
-                    theme="light"
+                    theme='light'
                     displayDataTypes={false}
                     enableClipboard={false}
                     rootName={false}
@@ -128,14 +130,14 @@ export function JsonViewer() {
             </ScrollArea>
           </Tabs.Panel>
 
-          <Tabs.Panel value="code" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full" scrollbarSize={6}>
-              <div className="p-5">
+          <Tabs.Panel value='code' className='flex-1 overflow-hidden'>
+            <ScrollArea className='h-full' scrollbarSize={6}>
+              <div className='p-5'>
                 <CodeHighlight
                   code={JSON.stringify(currentJson.data, null, 2)}
-                  language="json"
-                  radius="md"
-                  className="shadow-sm"
+                  language='json'
+                  radius='md'
+                  className='shadow-sm'
                   style={{
                     width: '100%',
                     whiteSpace: 'pre-wrap',
