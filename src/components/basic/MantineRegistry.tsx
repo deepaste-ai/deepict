@@ -18,7 +18,7 @@ async function loadShiki() {
 
 const shikiAdapter = createShikiAdapter(loadShiki);
 
-function MantineRegistry({ children }: { children: React.ReactNode }) {
+function MantineRegistry({ children }: { children: React.ReactNode; }) {
   return (
     <RootStyleRegistry>
       <MantineEmotionProvider>

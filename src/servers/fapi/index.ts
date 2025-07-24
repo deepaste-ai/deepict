@@ -1,5 +1,6 @@
 import 'server-only';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGroq } from '@ai-sdk/groq';
 import { zValidator } from '@hono/zod-validator';
 import { streamText } from 'ai';
 import dedent from 'dedent';
@@ -26,7 +27,7 @@ fapiServer.use(
   '*',
   except((c) => {
     return c.req.header().accept?.includes('text/event-stream');
-  }, compress())
+  }, compress()),
 );
 
 /**
@@ -40,7 +41,7 @@ fapiServer.use(
     allowHeaders: ['*'],
     exposeHeaders: ['*'],
     credentials: true,
-  })
+  }),
 );
 
 fapiServer.post(
@@ -52,20 +53,35 @@ fapiServer.post(
       json: z.string(),
       userInput: z.string().optional(),
       apiKey: z.string().optional(),
-    })
+      apiProvider: z.enum(['anthropic', 'groq']).optional(),
+    }),
   ),
   async (c) => {
-    const { prevHTML, json, userInput, apiKey: requestApiKey } = c.req.valid('json');
+    const { prevHTML, json, userInput, apiKey: requestApiKey, apiProvider = 'anthropic' } = c.req.valid('json');
 
-    const apiKey = requestApiKey || process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return c.json({ error: 'API key is required. Please configure your Anthropic API key in settings.' }, 400);
+    let model;
+
+    if (apiProvider === 'groq') {
+      const groqApiKey = requestApiKey || process.env.GROQ_API_KEY;
+      if (!groqApiKey) {
+        return c.json({ error: 'API key is required. Please configure your Groq API key in settings.' }, 400);
+      }
+
+      const groq = createGroq({
+        apiKey: groqApiKey,
+      });
+      model = groq('moonshotai/kimi-k2-instruct');
+    } else {
+      const anthropicApiKey = requestApiKey || process.env.ANTHROPIC_API_KEY;
+      if (!anthropicApiKey) {
+        return c.json({ error: 'API key is required. Please configure your Anthropic API key in settings.' }, 400);
+      }
+
+      const anthropic = createAnthropic({
+        apiKey: anthropicApiKey,
+      });
+      model = anthropic('claude-4-sonnet-20250514');
     }
-
-    const anthropic = createAnthropic({
-      apiKey,
-    });
-    const model = anthropic('claude-4-sonnet-20250514');
 
     const abortController = new AbortController();
     const { signal: abortSignal } = abortController;
@@ -116,7 +132,7 @@ fapiServer.post(
             请在head的第一个script标签中就将renderJSON赋值给一个全局变量，并使用这个全局变量来渲染JSON。
             `,
             abortSignal,
-            maxTokens: 64000,
+            maxTokens: apiProvider === 'groq' ? 16384 : 64000,
           });
           for await (const part of result.fullStream) {
             switch (part.type) {
@@ -159,9 +175,9 @@ fapiServer.post(
       },
       async (err) => {
         console.error(err);
-      }
+      },
     );
-  }
+  },
 );
 
 export default fapiServer;

@@ -43,26 +43,31 @@ src/
 ## Key Features
 
 ### 1. AI-Powered Visualization
+
 - Integration with Anthropic Claude API for intelligent JSON analysis
 - Real-time HTML component generation based on JSON structure
 - Streaming responses via Server-Sent Events (SSE)
 
 ### 2. File Processing
+
 - Support for both JSON and JSONL file formats
 - Drag-and-drop file upload interface
 - Automatic file type detection and validation
 
 ### 3. Multi-View Interface
+
 - **Visualization Tab**: AI-generated HTML components in iframe
 - **Preview Tab**: Interactive JSON tree viewer
 - **Raw JSON Tab**: Syntax-highlighted JSON code
 
 ### 4. Search & Navigation
+
 - Full-text search across JSON data
 - JSONL file navigation with item listing
 - Contextual search results
 
 ### 5. Chat Interface
+
 - Natural language interaction with AI
 - File upload via chat interface
 - Message history and conversation management
@@ -70,27 +75,35 @@ src/
 ## Core Components
 
 ### AIChat (`/components/AIChat.tsx`)
+
 The main AI interaction interface featuring:
+
 - Chat message display with markdown support
 - File upload capability
 - Settings access and API key management
 - Real-time streaming response handling
 
 ### JsonViewer (`/components/JsonViewer.tsx`)
+
 Multi-tab JSON display component:
+
 - Dynamic tab switching between visualization modes
 - Iframe sandbox for AI-generated HTML components
 - Interactive JSON tree viewer using `@textea/json-viewer`
 - Syntax highlighting with `@mantine/code-highlight`
 
 ### FileDropzone (`/components/FileDropzone.tsx`)
+
 Full-screen drag-and-drop interface:
+
 - Visual feedback for drag states
 - File type validation
 - Error handling with notifications
 
 ### App Store (`/stores/useAppStore.ts`)
+
 Centralized state management using Zustand:
+
 - File and JSON data management
 - Chat message handling
 - AI processing state
@@ -100,7 +113,9 @@ Centralized state management using Zustand:
 ## API Integration
 
 ### FAPI Server (`/servers/fapi/index.ts`)
+
 Fast API server built with Hono framework:
+
 - **Endpoint**: `/fapi/gen-vis-comp`
 - **Method**: POST with JSON payload
 - **Features**:
@@ -110,7 +125,9 @@ Fast API server built with Hono framework:
   - Error handling and API key validation
 
 ### SSE Service (`/services/sse.ts`)
+
 Server-Sent Events implementation:
+
 - Real-time streaming of AI responses
 - Connection management and error handling
 - Retry logic for failed connections
@@ -118,6 +135,7 @@ Server-Sent Events implementation:
 ## Development Workflow
 
 ### Local Development
+
 ```bash
 # Start Next.js development server
 pnpm next:dev
@@ -130,6 +148,7 @@ pnpm dev
 ```
 
 ### Code Quality
+
 ```bash
 # Run linting
 pnpm next:lint
@@ -142,6 +161,7 @@ pnpm prettier:check
 ```
 
 ### Building
+
 ```bash
 # Build for production
 pnpm build
@@ -153,9 +173,11 @@ pnpm dist
 ## Configuration
 
 ### Environment Variables
+
 - `ANTHROPIC_API_KEY`: Claude API key (can be set via UI settings)
 
 ### Build Configuration
+
 - Next.js configured for standalone mode
 - Electron builder for cross-platform distribution
 - TypeScript strict mode enabled
@@ -177,6 +199,7 @@ pnpm dist
 ## Dependencies
 
 ### Core Dependencies
+
 - `@ai-sdk/anthropic`: Claude API integration
 - `@mantine/core`: UI component library
 - `@textea/json-viewer`: JSON visualization
@@ -184,6 +207,7 @@ pnpm dist
 - `zustand`: State management
 
 ### Development Dependencies
+
 - `typescript`: Type checking
 - `eslint`: Code linting
 - `prettier`: Code formatting

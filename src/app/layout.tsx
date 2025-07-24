@@ -25,22 +25,22 @@ export default function RootLayout({
   const isElectronApp = isElectron();
 
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang='en' {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
         {/* Add web-specific meta tags */}
         {!isElectronApp && (
           <>
-            <meta name="apple-mobile-web-app-capable" content="yes" />
-            <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-            <meta name="apple-mobile-web-app-title" content="Deepict" />
-            <meta name="format-detection" content="telephone=no" />
-            <meta name="mobile-web-app-capable" content="yes" />
-            <meta name="msapplication-config" content="/browserconfig.xml" />
-            <meta name="msapplication-TileColor" content="#000000" />
-            <meta name="msapplication-tap-highlight" content="no" />
-            <link rel="manifest" href="/manifest.json" />
-            <link rel="shortcut icon" href="/favicon.ico" />
+            <meta name='apple-mobile-web-app-capable' content='yes' />
+            <meta name='apple-mobile-web-app-status-bar-style' content='default' />
+            <meta name='apple-mobile-web-app-title' content='Deepict' />
+            <meta name='format-detection' content='telephone=no' />
+            <meta name='mobile-web-app-capable' content='yes' />
+            <meta name='msapplication-config' content='/browserconfig.xml' />
+            <meta name='msapplication-TileColor' content='#000000' />
+            <meta name='msapplication-tap-highlight' content='no' />
+            <link rel='manifest' href='/manifest.json' />
+            <link rel='shortcut icon' href='/favicon.ico' />
           </>
         )}
       </head>

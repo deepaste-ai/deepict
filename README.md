@@ -12,7 +12,7 @@
 
 https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
 
-*👆 Watch the complete feature demonstration of Deepict*
+_👆 Watch the complete feature demonstration of Deepict_
 
 ## 🌟 Core Features
 
@@ -56,23 +56,24 @@ https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
 
 ## 🛠️ Tech Stack
 
-| Category            | Technology                    | Purpose                            |
-| ------------------- | ----------------------------- | ---------------------------------- |
-| **Frontend**        | Next.js 15 + React 19         | Modern web application framework   |
-| **Desktop**         | Electron 37                   | Cross-platform desktop runtime     |
-| **UI Library**      | Mantine 8                     | Component library with theming     |
-| **Styling**         | Emotion + Tailwind CSS + Sass | Multi-layered styling solution     |
+| Category            | Technology                    | Purpose                               |
+| ------------------- | ----------------------------- | ------------------------------------- |
+| **Frontend**        | Next.js 15 + React 19         | Modern web application framework      |
+| **Desktop**         | Electron 37                   | Cross-platform desktop runtime        |
+| **UI Library**      | Mantine 8                     | Component library with theming        |
+| **Styling**         | Emotion + Tailwind CSS + Sass | Multi-layered styling solution        |
 | **AI Service**      | Anthropic Claude              | Smart data analysis and visualization |
-| **Language**        | TypeScript                    | Type-safe development              |
-| **Package Manager** | pnpm                          | Fast, efficient package management |
-| **Build Tool**      | tsup                          | TypeScript bundler for Electron    |
-| **Code Quality**    | ESLint + dprint               | Linting and formatting             |
+| **Language**        | TypeScript                    | Type-safe development                 |
+| **Package Manager** | pnpm                          | Fast, efficient package management    |
+| **Build Tool**      | tsup                          | TypeScript bundler for Electron       |
+| **Code Quality**    | ESLint + dprint               | Linting and formatting                |
 
 ## 🚀 Deployment Options
 
 Deepict now supports multiple deployment methods:
 
 ### 📱 Web Deployment (New!)
+
 Deploy as a web application accessible through browsers:
 
 ```bash
@@ -82,6 +83,7 @@ pnpm web:start
 ```
 
 ### 🐳 Docker Deployment (New!)
+
 Containerized deployment for easy scaling:
 
 ```bash
@@ -94,6 +96,7 @@ docker run -p 3000:3000 deepict:latest
 ```
 
 ### 🖥️ Desktop Application (Original)
+
 Cross-platform desktop application:
 
 ```bash

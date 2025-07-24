@@ -12,6 +12,7 @@ export function streamCallHTMLComponentGenerator(
     json: string;
     userInput?: string;
     apiKey?: string;
+    apiProvider?: 'anthropic' | 'groq';
   },
   handlers: {
     onOpen: (response: Response) => Promise<void>;
@@ -19,7 +20,7 @@ export function streamCallHTMLComponentGenerator(
     onClose: () => void;
     onError: (err: unknown) => number | null | undefined | void;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   return fetchEventSource('/fapi/gen-vis-comp', {
     method: 'POST',

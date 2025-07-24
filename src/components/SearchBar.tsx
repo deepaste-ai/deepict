@@ -11,25 +11,25 @@ export function SearchBar() {
   };
 
   return (
-    <div className="w-full mb-4 px-1">
+    <div className='w-full mb-4 px-1'>
       <TextInput
-        placeholder="Search JSON data..."
+        placeholder='Search JSON data...'
         value={searchQuery}
         onChange={(event) => setSearchQuery(event.currentTarget.value)}
-        leftSection={<span className="icon-[mdi--magnify] w-4 h-4 text-gray-500" />}
+        leftSection={<span className='icon-[mdi--magnify] w-4 h-4 text-gray-500' />}
         rightSection={
           <ActionIcon
-            variant="transparent"
+            variant='transparent'
             onClick={handleClear}
-            size="sm"
-            className="hover:bg-gray-100 transition-colors"
+            size='sm'
+            className='hover:bg-gray-100 transition-colors'
           >
-            <span className="icon-[mdi--close] w-4 h-4 text-gray-500" />
+            <span className='icon-[mdi--close] w-4 h-4 text-gray-500' />
           </ActionIcon>
         }
-        size="md"
-        radius="md"
-        className="shadow-sm"
+        size='md'
+        radius='md'
+        className='shadow-sm'
         styles={{
           input: {
             borderColor: '#e5e7eb',

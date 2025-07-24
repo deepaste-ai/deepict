@@ -1,5 +1,8 @@
 {
   "typescript": {
+    "quoteStyle": "preferSingle",
+    "semiColons": "always",
+    "quoteProps": "asNeeded"
   },
   "json": {
   },
