@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import { useServerInsertedHTML } from "next/navigation";
-import { useState } from "react";
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import { useServerInsertedHTML } from 'next/navigation';
+import { useState } from 'react';
 
 export function RootStyleRegistry({ children }: { children: React.ReactNode }) {
   const [{ cache, flush }] = useState(() => {
-    const cache = createCache({ key: "my" });
+    const cache = createCache({ key: 'my' });
     cache.compat = true;
     const prevInsert = cache.insert;
     let inserted: string[] = [];
@@ -29,13 +29,13 @@ export function RootStyleRegistry({ children }: { children: React.ReactNode }) {
   useServerInsertedHTML(() => {
     const names = flush();
     if (names.length === 0) return null;
-    let styles = "";
+    let styles = '';
     for (const name of names) {
       styles += cache.inserted[name];
     }
     return (
       <style
-        data-emotion={`${cache.key} ${names.join(" ")}`}
+        data-emotion={`${cache.key} ${names.join(' ')}`}
         dangerouslySetInnerHTML={{
           __html: styles,
         }}

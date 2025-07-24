@@ -1,10 +1,10 @@
-"use client";
-import { useAppStore } from "@/stores/useAppStore";
-import { CodeHighlight } from "@mantine/code-highlight";
-import { ActionIcon, Avatar, Button, FileButton, Group, Paper, ScrollArea, Text, TextInput } from "@mantine/core";
-import { IconSettings } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
-import Settings from "./Settings";
+'use client';
+import { useAppStore } from '@/stores/useAppStore';
+import { CodeHighlight } from '@mantine/code-highlight';
+import { ActionIcon, Avatar, Button, FileButton, Group, Paper, ScrollArea, Text, TextInput } from '@mantine/core';
+import { IconSettings } from '@tabler/icons-react';
+import { useEffect, useRef, useState } from 'react';
+import Settings from './Settings';
 
 export function AIChat() {
   const {
@@ -20,7 +20,7 @@ export function AIChat() {
     loadSettings,
   } = useAppStore();
 
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [hasInitialized, setHasInitialized] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +41,7 @@ export function AIChat() {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     }
   }, [chatMessages]);
@@ -55,19 +55,19 @@ export function AIChat() {
     }
 
     addChatMessage({
-      role: "user",
+      role: 'user',
       content: inputValue,
     });
 
     const userInput = inputValue;
-    setInputValue("");
+    setInputValue('');
 
     // Generate HTML component using the SSE service
     await generateHTMLComponent(userInput);
   };
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter" && !event.shiftKey) {
+    if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       handleSend();
     }
@@ -77,8 +77,8 @@ export function AIChat() {
     if (!file) return;
 
     const fileName = file.name.toLowerCase();
-    const isJsonl = fileName.endsWith(".jsonl");
-    const isJson = fileName.endsWith(".json");
+    const isJsonl = fileName.endsWith('.jsonl');
+    const isJson = fileName.endsWith('.json');
 
     if (!isJsonl && !isJson) {
       // You can add notification here if needed
@@ -87,9 +87,9 @@ export function AIChat() {
 
     try {
       const text = await file.text();
-      await processFile(text, isJsonl ? "jsonl" : "json", file.name, file.size);
+      await processFile(text, isJsonl ? 'jsonl' : 'json', file.name, file.size);
     } catch (error) {
-      console.error("Error processing file:", error);
+      console.error('Error processing file:', error);
     }
   };
 
@@ -101,7 +101,7 @@ export function AIChat() {
     return parts.map((part, index) => {
       if (index % 3 === 2) {
         // This is code content
-        const language = parts[index - 1] || "text";
+        const language = parts[index - 1] || 'text';
         return (
           <CodeHighlight
             key={index}
@@ -110,9 +110,9 @@ export function AIChat() {
             radius="md"
             className="my-2"
             style={{
-              fontSize: "12px",
-              maxWidth: "100%",
-              overflow: "hidden",
+              fontSize: '12px',
+              maxWidth: '100%',
+              overflow: 'hidden',
             }}
           />
         );
@@ -121,18 +121,16 @@ export function AIChat() {
         return null;
       } else {
         // This is regular text
-        return part
-          ? (
-            <Text
-              key={index}
-              size="sm"
-              className="whitespace-pre-wrap break-words leading-relaxed"
-              style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
-            >
-              {part}
-            </Text>
-          )
-          : null;
+        return part ? (
+          <Text
+            key={index}
+            size="sm"
+            className="whitespace-pre-wrap break-words leading-relaxed"
+            style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
+          >
+            {part}
+          </Text>
+        ) : null;
       }
     });
   };
@@ -174,68 +172,66 @@ export function AIChat() {
       </div>
 
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4" scrollbarSize={6}>
-        {chatMessages.length === 0
-          ? (
-            <div className="text-center py-12">
-              <span className="icon-[mdi--robot] w-16 h-16 text-purple-300 mx-auto mb-6 block" />
-              {!apiKey
-                ? (
-                  <div className="max-w-xs mx-auto">
-                    <Text size="sm" c="dimmed" className="leading-relaxed mb-3">
-                      Configure your Anthropic API key to start using the AI assistant!
-                    </Text>
-                    <Button
-                      size="xs"
-                      variant="light"
-                      color="purple"
-                      leftSection={<IconSettings size={14} />}
-                      onClick={() => setShowSettings(true)}
+        {chatMessages.length === 0 ? (
+          <div className="text-center py-12">
+            <span className="icon-[mdi--robot] w-16 h-16 text-purple-300 mx-auto mb-6 block" />
+            {!apiKey ? (
+              <div className="max-w-xs mx-auto">
+                <Text size="sm" c="dimmed" className="leading-relaxed mb-3">
+                  Configure your Anthropic API key to start using the AI assistant!
+                </Text>
+                <Button
+                  size="xs"
+                  variant="light"
+                  color="purple"
+                  leftSection={<IconSettings size={14} />}
+                  onClick={() => setShowSettings(true)}
+                >
+                  Configure API Key
+                </Button>
+              </div>
+            ) : (
+              <Text size="sm" c="dimmed" className="max-w-xs mx-auto leading-relaxed">
+                Ask me to visualize your JSON data or help with any questions!
+              </Text>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {chatMessages.map((message) => (
+              <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  className={`max-w-[280px] min-w-[120px] ${
+                    message.role === 'user'
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'bg-white text-gray-900 shadow-md border'
+                  } rounded-2xl px-4 py-3`}
+                >
+                  <Group align="flex-start" wrap="nowrap" gap="xs">
+                    <Avatar
+                      size="sm"
+                      color={message.role === 'user' ? 'blue' : 'gray'}
+                      className="flex-shrink-0"
+                      variant={message.role === 'user' ? 'filled' : 'light'}
                     >
-                      Configure API Key
-                    </Button>
-                  </div>
-                )
-                : (
-                  <Text size="sm" c="dimmed" className="max-w-xs mx-auto leading-relaxed">
-                    Ask me to visualize your JSON data or help with any questions!
-                  </Text>
-                )}
-            </div>
-          )
-          : (
-            <div className="space-y-3">
-              {chatMessages.map((message) => (
-                <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`max-w-[280px] min-w-[120px] ${
-                      message.role === "user"
-                        ? "bg-blue-500 text-white shadow-md"
-                        : "bg-white text-gray-900 shadow-md border"
-                    } rounded-2xl px-4 py-3`}
-                  >
-                    <Group align="flex-start" wrap="nowrap" gap="xs">
-                      <Avatar
-                        size="sm"
-                        color={message.role === "user" ? "blue" : "gray"}
-                        className="flex-shrink-0"
-                        variant={message.role === "user" ? "filled" : "light"}
-                      >
-                        {message.role === "user"
-                          ? <span className="icon-[mdi--account] w-3.5 h-3.5" />
-                          : <span className="icon-[mdi--robot] w-3.5 h-3.5" />}
-                      </Avatar>
-                      <div className="flex-1 min-w-0 overflow-hidden">
-                        <div className="mb-1 break-words">{formatMessageContent(message.content)}</div>
-                        <Text size="xs" c={message.role === "user" ? "white" : "dimmed"} className="opacity-70">
-                          {message.timestamp.toLocaleTimeString()}
-                        </Text>
-                      </div>
-                    </Group>
-                  </div>
+                      {message.role === 'user' ? (
+                        <span className="icon-[mdi--account] w-3.5 h-3.5" />
+                      ) : (
+                        <span className="icon-[mdi--robot] w-3.5 h-3.5" />
+                      )}
+                    </Avatar>
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <div className="mb-1 break-words">{formatMessageContent(message.content)}</div>
+                      <Text size="xs" c={message.role === 'user' ? 'white' : 'dimmed'} className="opacity-70">
+                        {message.timestamp.toLocaleTimeString()}
+                      </Text>
+                    </div>
+                  </Group>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        )}
       </ScrollArea>
 
       <div className="p-4 border-t bg-gray-50">

@@ -1,7 +1,7 @@
-import { DataType, FileInfo, JsonData } from "@/stores/useAppStore";
+import { DataType, FileInfo, JsonData } from '@/stores/useAppStore';
 
 export function parseJsonFile(content: string, type: DataType): JsonData[] {
-  if (type === "json") {
+  if (type === 'json') {
     try {
       const parsed = JSON.parse(content);
       return [
@@ -11,11 +11,11 @@ export function parseJsonFile(content: string, type: DataType): JsonData[] {
         },
       ];
     } catch {
-      throw new Error("Invalid JSON format");
+      throw new Error('Invalid JSON format');
     }
-  } else if (type === "jsonl") {
+  } else if (type === 'jsonl') {
     try {
-      const lines = content.split("\n").filter((line) => line.trim());
+      const lines = content.split('\n').filter((line) => line.trim());
       const jsonData: JsonData[] = [];
 
       lines.forEach((line, index) => {
@@ -31,7 +31,7 @@ export function parseJsonFile(content: string, type: DataType): JsonData[] {
       });
 
       if (jsonData.length === 0) {
-        throw new Error("No valid JSON lines found");
+        throw new Error('No valid JSON lines found');
       }
 
       return jsonData;
@@ -40,15 +40,15 @@ export function parseJsonFile(content: string, type: DataType): JsonData[] {
     }
   }
 
-  throw new Error("Unsupported file type");
+  throw new Error('Unsupported file type');
 }
 
 export function generateChatMessage(fileInfo: FileInfo): string {
   const formatFileSize = (bytes: number): string => {
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    if (bytes === 0) return "0 Bytes";
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    if (bytes === 0) return '0 Bytes';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   const fileSize = formatFileSize(fileInfo.size);
@@ -57,5 +57,5 @@ export function generateChatMessage(fileInfo: FileInfo): string {
   return `📁 **File uploaded**: ${fileInfo.name}
 📊 **Type**: ${fileTypeDisplay}
 📏 **Size**: ${fileSize}
-📋 **Items**: ${fileInfo.itemCount} ${fileInfo.itemCount === 1 ? "item" : "items"}`;
+📋 **Items**: ${fileInfo.itemCount} ${fileInfo.itemCount === 1 ? 'item' : 'items'}`;
 }

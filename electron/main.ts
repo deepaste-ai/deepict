@@ -1,8 +1,8 @@
-import { is } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, screen } from "electron";
-import { getPort } from "get-port-please";
-import { startServer } from "next/dist/server/lib/start-server";
-import { join } from "path";
+import { is } from '@electron-toolkit/utils';
+import { app, BrowserWindow, ipcMain, screen } from 'electron';
+import { getPort } from 'get-port-please';
+import { startServer } from 'next/dist/server/lib/start-server';
+import { join } from 'path';
 
 // Constants
 const WINDOW_CONFIG = {
@@ -45,7 +45,7 @@ const getDefaultWindowSize = () => {
  */
 const ensureNextJSServer = async (): Promise<number> => {
   if (nextJSServerInfo?.isRunning) {
-    console.log("Next.js server already running on port:", nextJSServerInfo.port);
+    console.log('Next.js server already running on port:', nextJSServerInfo.port);
     return nextJSServerInfo.port;
   }
 
@@ -54,14 +54,14 @@ const ensureNextJSServer = async (): Promise<number> => {
       const nextJSPort = await getPort({
         portRange: NEXTJS_SERVER_CONFIG.PORT_RANGE,
       });
-      const webDir = join(app.getAppPath(), "app");
+      const webDir = join(app.getAppPath(), 'app');
 
       console.log(`Starting Next.js server on port: ${nextJSPort} (attempt ${attempt})`);
 
       await startServer({
         dir: webDir,
         isDev: false,
-        hostname: "localhost",
+        hostname: 'localhost',
         port: nextJSPort,
         customServer: true,
         allowRetry: false,
@@ -69,7 +69,7 @@ const ensureNextJSServer = async (): Promise<number> => {
         minimalMode: true,
       });
 
-      console.log("Next.js server started successfully on port:", nextJSPort);
+      console.log('Next.js server started successfully on port:', nextJSPort);
 
       nextJSServerInfo = { port: nextJSPort, isRunning: true };
       return nextJSPort;
@@ -85,7 +85,7 @@ const ensureNextJSServer = async (): Promise<number> => {
     }
   }
 
-  throw new Error("Unexpected error in ensureNextJSServer");
+  throw new Error('Unexpected error in ensureNextJSServer');
 };
 
 /**
@@ -99,37 +99,35 @@ const createWindow = async (): Promise<BrowserWindow> => {
     height,
     minWidth: WINDOW_CONFIG.MIN_WIDTH,
     minHeight: WINDOW_CONFIG.MIN_HEIGHT,
-    icon: is.dev 
-      ? join(__dirname, "../build-assets/icon.png") 
-      : join(process.resourcesPath, "build-assets/icon.png"),
+    icon: is.dev ? join(__dirname, '../build-assets/icon.png') : join(process.resourcesPath, 'build-assets/icon.png'),
     webPreferences: {
-      preload: join(__dirname, "preload.js"),
+      preload: join(__dirname, 'preload.js'),
       nodeIntegration: true,
     },
     show: false,
   });
 
   // Set up event listeners first
-  mainWindow.once("ready-to-show", () => {
-    console.log("Window ready to show");
+  mainWindow.once('ready-to-show', () => {
+    console.log('Window ready to show');
     mainWindow?.show();
   });
 
-  mainWindow.on("closed", () => {
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
   // Load URL after setting up listeners
   try {
     if (is.dev) {
-      await mainWindow.loadURL("http://localhost:3000");
+      await mainWindow.loadURL('http://localhost:3000');
     } else {
       const port = await ensureNextJSServer();
       await mainWindow.loadURL(`http://localhost:${port}`);
     }
   } catch (error) {
-    console.error("Error loading window URL:", error);
-    await mainWindow.loadURL("data:text/html,<h1>Server Error</h1><p>Unable to start the Next.js server.</p>");
+    console.error('Error loading window URL:', error);
+    await mainWindow.loadURL('data:text/html,<h1>Server Error</h1><p>Unable to start the Next.js server.</p>');
   }
 
   return mainWindow;
@@ -139,31 +137,31 @@ const createWindow = async (): Promise<BrowserWindow> => {
 app.whenReady().then(async () => {
   try {
     await createWindow();
-    console.log("Application started successfully");
+    console.log('Application started successfully');
   } catch (error) {
-    console.error("Error creating window:", error);
+    console.error('Error creating window:', error);
   }
 
   // IPC handling
-  ipcMain.on("ping", () => console.log("pong"));
+  ipcMain.on('ping', () => console.log('pong'));
 
   // Activate event handling
-  app.on("activate", async () => {
+  app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       try {
         await createWindow();
       } catch (error) {
-        console.error("Error creating window on activate:", error);
+        console.error('Error creating window on activate:', error);
       }
     }
   });
 });
 
 // All windows closed
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     if (nextJSServerInfo) {
-      console.log("Cleaning up Next.js server");
+      console.log('Cleaning up Next.js server');
       nextJSServerInfo.isRunning = false;
       nextJSServerInfo = null;
     }
@@ -172,7 +170,7 @@ app.on("window-all-closed", () => {
 });
 
 // Cleanup before quit
-app.on("before-quit", () => {
+app.on('before-quit', () => {
   if (nextJSServerInfo) {
     nextJSServerInfo.isRunning = false;
     nextJSServerInfo = null;
@@ -180,14 +178,14 @@ app.on("before-quit", () => {
 });
 
 // Handle uncaught exceptions
-process.on("uncaughtException", (error) => {
-  console.error("Uncaught Exception:", error);
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
   if (nextJSServerInfo) {
     nextJSServerInfo.isRunning = false;
     nextJSServerInfo = null;
   }
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });

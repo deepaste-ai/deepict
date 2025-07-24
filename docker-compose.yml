@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  deepict:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DEPLOYMENT_TARGET=web
+      - NEXT_TELEMETRY_DISABLED=1
+      # Add your Anthropic API key here or use .env file
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Optional: Add volume for persistent data if needed
+    # volumes:
+    #   - deepict_data:/app/data
+
+# Optional: Add named volume for persistent data
+# volumes:
+#   deepict_data:
