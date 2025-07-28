@@ -1,0 +1,39 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "deepict-container",
+	"main": "src/cf-worker.ts",
+	"compatibility_date": "2025-01-28",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"containers": [
+		{
+			"class_name": "DeepictContainer",
+			"image": "./Dockerfile.cloudflare",
+			"max_instances": 10
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"class_name": "DeepictContainer",
+				"name": "DEEPICT_CONTAINER"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"new_sqlite_classes": [
+				"DeepictContainer"
+			],
+			"tag": "v1"
+		}
+	],
+	"vars": {
+		"NODE_ENV": "production",
+		"DEPLOYMENT_TARGET": "web"
+	}
+}

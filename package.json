@@ -77,11 +77,16 @@
     "docker:build": "docker build -t deepict:latest .",
     "docker:run": "docker run -p 3000:3000 deepict:latest",
     "docker:dev": "docker-compose up --build",
-    "docker:prod": "docker-compose -f docker-compose.yml up -d"
+    "docker:prod": "docker-compose -f docker-compose.yml up -d",
+    "cf:deploy": "wrangler deploy",
+    "cf:dev": "wrangler dev",
+    "cf:logs": "wrangler tail",
+    "cf:types": "wrangler types"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.12",
     "@ai-sdk/groq": "^1.2.9",
+    "@cloudflare/containers": "^0.0.19",
     "@electron-toolkit/utils": "^4.0.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -116,6 +121,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@iconify/json": "^2.2.357",
+    "wrangler": "^4.26.0",
     "@iconify/tailwind4": "^1.0.6",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",

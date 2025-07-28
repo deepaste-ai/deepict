@@ -35,7 +35,7 @@ export function streamCallHTMLComponentGenerator(
       } else if (response.status >= 400 && response.status < 500 && response.status !== 429) {
         // Handle API key errors
         if (response.status === 400) {
-          const errorData = await response.json();
+          const errorData = await response.json() as { error?: string };
           throw new SSEFatalError(errorData.error || 'API key configuration error');
         }
         throw new SSEFatalError();

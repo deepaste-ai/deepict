@@ -2,6 +2,7 @@
 import { useAppStore } from '@/stores/useAppStore';
 import { CodeHighlight } from '@mantine/code-highlight';
 import { ActionIcon, Avatar, Button, FileButton, Group, Paper, ScrollArea, Text, TextInput } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconSettings } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import Settings from './Settings';
@@ -81,6 +82,13 @@ export function AIChat() {
   const handleFileUpload = async (file: File | null) => {
     if (!file) return;
 
+    console.log('File upload clicked:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      sizeKB: (file.size / 1024).toFixed(1)
+    });
+
     const fileName = file.name.toLowerCase();
     const isJsonl = fileName.endsWith('.jsonl');
     const isJson = fileName.endsWith('.json');
@@ -90,8 +98,44 @@ export function AIChat() {
       return;
     }
 
+    // Check file size limits
+    const MAX_JSON_SIZE = 256 * 1024; // 256KB
+    
+    console.log('File size check (click upload):', {
+      isJson,
+      fileSize: file.size,
+      maxSize: MAX_JSON_SIZE,
+      exceedsLimit: isJson && file.size > MAX_JSON_SIZE
+    });
+    
+    if (isJson && file.size > MAX_JSON_SIZE) {
+      notifications.show({
+        title: 'File too large',
+        message: `JSON files larger than 256KB are not supported yet. Your file is ${(file.size / 1024).toFixed(1)}KB.`,
+        color: 'red',
+      });
+      return;
+    }
+
     try {
       const text = await file.text();
+      
+      // For JSONL files, check if total size exceeds 256KB per line
+      if (isJsonl) {
+        const lines = text.split('\n').filter(line => line.trim());
+        const lineCount = lines.length;
+        const maxTotalSize = MAX_JSON_SIZE * lineCount;
+        
+        if (file.size > maxTotalSize) {
+          notifications.show({
+            title: 'File too large',
+            message: `JSONL files exceeding 256KB per line are not supported yet. Your file would need to be under ${(maxTotalSize / 1024 / 1024).toFixed(1)}MB for ${lineCount} lines.`,
+            color: 'red',
+          });
+          return;
+        }
+      }
+      
       await processFile(text, isJsonl ? 'jsonl' : 'json', file.name, file.size);
     } catch (error) {
       console.error('Error processing file:', error);

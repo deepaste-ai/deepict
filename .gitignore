@@ -153,3 +153,7 @@ next-env.d.ts
 
 # artifacts
 build
+
+# wrangler
+.wrangler
+.dev.vars
