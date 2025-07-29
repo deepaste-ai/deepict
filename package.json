@@ -72,16 +72,23 @@
     "dist:deb": "run-s build electron:dist:deb",
     "web:dev": "cross-env DEPLOYMENT_TARGET=web next dev",
     "web:build": "cross-env DEPLOYMENT_TARGET=web next build",
+    "web:build:analyze": "cross-env DEPLOYMENT_TARGET=web ANALYZE=true next build",
     "web:start": "cross-env DEPLOYMENT_TARGET=web next start",
     "web:build:config": "cp next.config.web.ts next.config.ts && pnpm web:build",
     "docker:build": "docker build -t deepict:latest .",
     "docker:run": "docker run -p 3000:3000 deepict:latest",
     "docker:dev": "docker-compose up --build",
-    "docker:prod": "docker-compose -f docker-compose.yml up -d"
+    "docker:prod": "docker-compose -f docker-compose.yml up -d",
+    "cf:build": "node scripts/cf-build.js",
+    "cf:preview": "pnpm cf:build && opennextjs-cloudflare preview",
+    "cf:deploy": "pnpm cf:build && opennextjs-cloudflare deploy",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "cf:logs": "wrangler tail"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.12",
     "@ai-sdk/groq": "^1.2.9",
+    "@cloudflare/containers": "^0.0.19",
     "@electron-toolkit/utils": "^4.0.0",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
@@ -117,6 +124,7 @@
     "@eslint/eslintrc": "^3",
     "@iconify/json": "^2.2.357",
     "@iconify/tailwind4": "^1.0.6",
+    "@opennextjs/cloudflare": "^1.6.1",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -138,7 +146,8 @@
     "sass-embedded": "^1.89.2",
     "tailwindcss": "^4",
     "tsup": "^8.5.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.26.0"
   },
   "packageManager": "pnpm@10.7.1",
   "pnpm": {

@@ -1,0 +1,13 @@
+main = ".open-next/worker.js"
+name = "deepict"
+compatibility_date = "2025-03-25"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NODE_ENV = "production"
+DEPLOYMENT_TARGET = "web"
+
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"

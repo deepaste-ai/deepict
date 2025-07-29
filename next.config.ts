@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     // Grab the existing rule that handles SVG imports
     const existingSVGRule = config.module.rules.find((rule: any) => rule.test?.test?.('.svg'));
 
@@ -58,14 +58,61 @@ const nextConfig: NextConfig = {
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     existingSVGRule.exclude = /\.svg$/i;
 
-    // Environment variables are already handled by Next.js
-    // No need to manually add DefinePlugin
+    // Production optimizations
+    if (!isServer && isWeb) {
+      // Optimize chunk splitting for production
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk for all node_modules
+            vendor: {
+              name: 'vendor',
+              chunks: 'all',
+              test: /node_modules/,
+              priority: 10,
+            },
+            // Common chunk for code used in multiple places
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 5,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
+            // Mantine components in a separate chunk
+            mantine: {
+              name: 'mantine',
+              test: /[\\/]node_modules[\\/]@mantine[\\/]/,
+              chunks: 'all',
+              priority: 20,
+            },
+            // AI SDK in a separate chunk
+            ai: {
+              name: 'ai',
+              test: /[\\/]node_modules[\\/](@ai-sdk|ai)[\\/]/,
+              chunks: 'all',
+              priority: 15,
+            },
+          },
+        },
+        // Minimize number of chunks
+        runtimeChunk: 'single',
+        moduleIds: 'deterministic',
+      };
+    }
 
     return config;
   },
   experimental: {
-    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+    optimizePackageImports: ['@mantine/core', '@mantine/hooks', '@tabler/icons-react'],
   },
+  // Move serverExternalPackages to the root level
+  serverExternalPackages: ['sharp'],
   // Use standalone for both Electron and web deployment
   output: 'standalone',
 
@@ -92,6 +139,16 @@ const nextConfig: NextConfig = {
 
     // Production optimizations for web
     productionBrowserSourceMaps: false,
+    
+    // Optimize images
+    images: {
+      minimumCacheTTL: 60,
+      formats: ['image/webp'],
+    },
+    
+    // Enable build cache
+    cacheHandler: process.env.NODE_ENV === 'production' ? undefined : undefined,
+    cacheMaxMemorySize: 0, // Disable in-memory caching
 
     // Security headers for web deployment
     async headers() {

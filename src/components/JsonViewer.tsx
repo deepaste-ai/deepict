@@ -4,11 +4,13 @@ import { CodeHighlight } from '@mantine/code-highlight';
 import { Group, Paper, ScrollArea, Tabs, Text } from '@mantine/core';
 import { JsonViewer as TexteaJsonViewer } from '@textea/json-viewer';
 import { useEffect, useRef, useState } from 'react';
+import { DemoFilesSection } from './DemoFilesSection';
 
 export function JsonViewer() {
-  const { getCurrentJson, isFileUploading, jsonHTMLComponent } = useAppStore();
+  const { getCurrentJson, isFileUploading, jsonHTMLComponent, isAIProcessing } = useAppStore();
   const [activeTab, setActiveTab] = useState<string>('preview');
   const prevJsonHTMLComponent = useRef<string | null>(null);
+  const [finalHTML, setFinalHTML] = useState<string | null>(null);
 
   const currentJson = getCurrentJson();
 
@@ -31,34 +33,45 @@ export function JsonViewer() {
     }
   }, [jsonHTMLComponent, activeTab]); // Only switch on first appearance
 
+  // Update finalHTML only when AI processing is complete
+  useEffect(() => {
+    if (!isAIProcessing && jsonHTMLComponent) {
+      setFinalHTML(jsonHTMLComponent);
+    }
+  }, [isAIProcessing, jsonHTMLComponent]);
+
   if (!currentJson) {
     return (
-      <Paper withBorder className='h-full flex-1 flex items-center justify-center shadow-sm'>
-        <div className='text-center p-8'>
-          {isFileUploading
-            ? (
-              <>
-                <span className='icon-[mdi--loading] w-16 h-16 text-blue-500 mx-auto mb-6 block animate-spin' />
-                <Text size='lg' fw={500} c='blue' className='mb-2'>
-                  Processing file...
-                </Text>
-                <Text size='sm' c='dimmed'>
-                  Please wait while we parse your data
-                </Text>
-              </>
-            )
-            : (
-              <>
+      <Paper withBorder className='h-full flex-1 flex flex-col shadow-sm overflow-hidden'>
+        {isFileUploading ? (
+          <div className='h-full flex items-center justify-center'>
+            <div className='text-center p-8'>
+              <span className='icon-[mdi--loading] w-16 h-16 text-blue-500 mx-auto mb-6 block animate-spin' />
+              <Text size='lg' fw={500} c='blue' className='mb-2'>
+                Processing file...
+              </Text>
+              <Text size='sm' c='dimmed'>
+                Please wait while we parse your data
+              </Text>
+            </div>
+          </div>
+        ) : (
+          <ScrollArea className='h-full'>
+            <div className='p-8'>
+              <div className='text-center mb-8'>
                 <span className='icon-[mdi--code-json] w-16 h-16 text-gray-400 mx-auto mb-6 block' />
                 <Text size='lg' fw={500} c='dimmed' className='mb-2'>
                   No JSON data selected
                 </Text>
-                <Text size='sm' c='dimmed' className='max-w-md mx-auto leading-relaxed'>
-                  Drag and drop JSON or JSONL files here to get started, or use the attachment button in the chat
+                <Text size='sm' c='dimmed' className='max-w-md mx-auto leading-relaxed mb-8'>
+                  Drag and drop JSON or JSONL files here to get started, or try one of our demo datasets below
                 </Text>
-              </>
-            )}
-        </div>
+              </div>
+              
+              <DemoFilesSection />
+            </div>
+          </ScrollArea>
+        )}
       </Paper>
     );
   }
@@ -97,12 +110,28 @@ export function JsonViewer() {
           {jsonHTMLComponent && (
             <Tabs.Panel value='visualization' className='flex-1 overflow-hidden'>
               <div className='h-full w-full'>
-                <iframe
-                  srcDoc={jsonHTMLComponent.replace('{†RENDER_JSON†}', JSON.stringify(currentJson.data, null, 2))}
-                  className='w-full h-full border-0'
-                  sandbox='allow-scripts'
-                  title='JSON Visualization'
-                />
+                {isAIProcessing ? (
+                  <div className='h-full flex items-center justify-center'>
+                    <div className='text-center'>
+                      <span className='icon-[mdi--loading] w-12 h-12 text-blue-500 mx-auto mb-4 block animate-spin' />
+                      <Text size='md' fw={500} c='blue' className='mb-2'>
+                        Generating visualization...
+                      </Text>
+                      <Text size='sm' c='dimmed'>
+                        AI is creating your custom component
+                      </Text>
+                    </div>
+                  </div>
+                ) : (
+                  finalHTML && (
+                    <iframe
+                      srcDoc={finalHTML.replace('{†RENDER_JSON†}', JSON.stringify(currentJson.data, null, 2))}
+                      className='w-full h-full border-0'
+                      sandbox='allow-scripts'
+                      title='JSON Visualization'
+                    />
+                  )
+                )}
               </div>
             </Tabs.Panel>
           )}
