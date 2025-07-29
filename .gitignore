@@ -157,3 +157,7 @@ build
 # wrangler
 .wrangler
 .dev.vars
+
+# OpenNext build output
+.open-next
+.vercel

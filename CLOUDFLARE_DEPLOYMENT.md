@@ -1,125 +1,153 @@
-# Cloudflare Container Deployment Guide
+# Cloudflare Deployment Guide (OpenNext)
 
-This guide explains how to deploy Deepict to Cloudflare Workers using Containers and Durable Objects.
+This guide explains how to deploy Deepict to Cloudflare Workers using the OpenNext adapter.
 
-## Architecture Overview
+## Overview
 
-Cloudflare Containers use Durable Objects to run containerized applications. The architecture consists of:
-
-1. **Worker Entry Point** (`src/cf-worker.ts`): Manages container lifecycle and routing
-2. **Container Class** (`DeepictContainer`): Extends the Container base class to configure the container
-3. **Dockerfile** (`Dockerfile.cloudflare`): Builds the Next.js application container
-4. **Configuration** (`wrangler.json`): Cloudflare deployment configuration
+This deployment uses [@opennextjs/cloudflare](https://opennext.js.org/cloudflare) adapter to run Next.js applications on Cloudflare Workers without Docker containers, providing faster builds and deployments.
 
 ## Prerequisites
 
-1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-2. Authenticate with Cloudflare:
-   ```bash
-   wrangler login
-   ```
-
-3. Ensure Docker is installed and running on your system.
+1. **Node.js 18+** installed
+2. **pnpm** package manager
+3. **Cloudflare account** with Workers enabled
+4. **Wrangler CLI** (installed as dev dependency)
 
 ## Configuration Files
 
-### wrangler.json
-The main configuration file for Cloudflare deployment:
-- Container class: `DeepictContainer`
-- Durable Object binding: `DEEPICT_CONTAINER`
-- Max instances: 10
-- Uses nodejs_compat for Node.js compatibility
+### wrangler.toml
+Main configuration for Cloudflare Workers:
+```toml
+main = ".open-next/worker.js"
+name = "deepict"
+compatibility_date = "2025-03-25"
+compatibility_flags = ["nodejs_compat"]
 
-### src/cf-worker.ts
-The Worker entry point that:
-- Defines the container class with lifecycle hooks
-- Routes all requests to the container instance
-- Configures container port (3000) and sleep timeout (5m)
+[vars]
+NODE_ENV = "production"
+DEPLOYMENT_TARGET = "web"
 
-### Dockerfile.cloudflare
-Optimized Dockerfile for Cloudflare Containers:
-- Based on Node.js 20 Alpine
-- Multi-stage build for smaller image size
-- Runs Next.js in standalone mode
-- Exposes port 3000 (matches container configuration)
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+```
 
-## Deployment Steps
+### open-next.config.ts
+OpenNext adapter configuration:
+```typescript
+import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-1. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
+export default defineCloudflareConfig();
+```
 
-2. **Test locally with Wrangler:**
-   ```bash
-   pnpm cf:dev
-   ```
+## Development Workflow
 
-3. **Deploy to Cloudflare:**
-   ```bash
-   pnpm cf:deploy
-   ```
+### 1. Install Dependencies
+```bash
+pnpm install
+```
 
-4. **View logs:**
-   ```bash
-   pnpm cf:logs
-   ```
+### 2. Local Development (Next.js Dev Server)
+```bash
+pnpm dev
+```
+This uses the Next.js development server for the best developer experience.
 
-5. **Generate TypeScript types:**
-   ```bash
-   pnpm cf:types
-   ```
+### 3. Preview with Cloudflare Runtime
+```bash
+pnpm preview
+```
+This builds and runs your app in the Cloudflare Workers runtime locally.
+
+### 4. Deploy to Production
+```bash
+pnpm deploy
+```
+This builds and deploys your app to Cloudflare Workers.
 
 ## Available Scripts
 
-- `pnpm cf:deploy` - Deploy to Cloudflare Workers
-- `pnpm cf:dev` - Run locally with Wrangler
+- `pnpm dev` - Start Next.js development server
+- `pnpm cf:build` - Build with optimizations for Cloudflare
+- `pnpm cf:preview` - Build and preview in Cloudflare runtime
+- `pnpm cf:deploy` - Build and deploy to Cloudflare Workers
+- `pnpm cf:typegen` - Generate TypeScript types for Cloudflare bindings
 - `pnpm cf:logs` - Tail production logs
-- `pnpm cf:types` - Generate TypeScript types for bindings
 
-## Container Lifecycle
+## Custom Domain Setup
 
-The container has the following lifecycle hooks:
+The custom domain is configured in `wrangler.toml`:
+```toml
+routes = [
+  { pattern = "deepict.deepaste.ai", custom_domain = true }
+]
+```
 
-- **onStart()**: Called when the container starts
-- **onStop()**: Called when the container shuts down
-- **onError()**: Called when the container encounters an error
-
-The container will automatically sleep after 5 minutes of inactivity to save resources.
-
-## Health Check
-
-The application includes a health check endpoint at `/api/health` that returns:
-- Status (healthy/unhealthy)
-- Timestamp
-- Version information
-- Environment details
-- Memory usage
-- Available features
+To use a different domain:
+1. Update the `pattern` in `wrangler.toml`
+2. Ensure the domain is managed by Cloudflare
+3. Deploy the application
 
 ## Environment Variables
 
-The container receives these environment variables:
+Environment variables are set in the `[vars]` section of `wrangler.toml`:
 - `NODE_ENV=production`
 - `DEPLOYMENT_TARGET=web`
-- `NEXT_TELEMETRY_DISABLED=1`
-- `PORT=3000`
-- `HOSTNAME=0.0.0.0`
+
+For sensitive data, use Cloudflare secrets:
+```bash
+wrangler secret put API_KEY
+```
 
 ## Troubleshooting
 
-1. **Container Build Issues:** Ensure Docker is running and the Dockerfile builds successfully
-2. **Deployment Errors:** Check `wrangler.json` configuration and authentication
-3. **Runtime Errors:** Check logs with `pnpm cf:logs`
-4. **Type Errors:** Run `pnpm cf:types` to generate updated type definitions
+### Build Issues
+- Ensure you're using Node.js 18 or later
+- Run `pnpm install` to update dependencies
+- Clear the build cache: `rm -rf .open-next`
+
+### Deployment Errors
+- Check `wrangler.toml` configuration
+- Verify Cloudflare authentication: `wrangler login`
+- Check compatibility date and flags
+
+### Runtime Errors
+- View logs: `pnpm cf:logs`
+- Check browser console for client-side errors
+- Verify API endpoints are working
+
+## Performance Benefits
+
+Using OpenNext adapter provides:
+- **Faster builds** - No Docker image creation
+- **Quick deployments** - Direct Worker upload
+- **Better cold starts** - Optimized for Workers runtime
+- **Native Workers features** - Full access to Cloudflare APIs
+
+## Build Optimizations
+
+The build process uses optimizations from `next.config.web.ts`:
+- **Chunk Splitting** - Reduces number of JS files
+- **Vendor Bundling** - Groups dependencies for better caching
+- **SWC Minification** - Faster and better compression
+- **Package Optimization** - Only imports used components
+
+To ensure optimizations are applied:
+1. The build script copies `next.config.web.ts` to `next.config.ts`
+2. Sets `DEPLOYMENT_TARGET=web` environment variable
+3. Runs OpenNext build with production optimizations
+
+## Monitoring
+
+After deployment:
+1. Check deployment status in Cloudflare dashboard
+2. Monitor performance metrics
+3. Set up alerts for errors
+4. Use `pnpm cf:logs` for real-time logs
 
 ## Notes
 
-- Containers run in Durable Objects with automatic scaling
-- Each container instance can handle multiple requests
-- Containers automatically sleep after inactivity to save resources
-- The Worker routes all requests to a single container instance (singleton pattern)
+- The adapter handles all Next.js features including SSR, SSG, and API routes
+- Static assets are served through Workers Assets
+- The build output is in `.open-next` directory
+- Compatible with Next.js 13+ App Router and Pages Router

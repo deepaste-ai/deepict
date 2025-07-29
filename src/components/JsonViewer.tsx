@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from 'react';
 import { DemoFilesSection } from './DemoFilesSection';
 
 export function JsonViewer() {
-  const { getCurrentJson, isFileUploading, jsonHTMLComponent } = useAppStore();
+  const { getCurrentJson, isFileUploading, jsonHTMLComponent, isAIProcessing } = useAppStore();
   const [activeTab, setActiveTab] = useState<string>('preview');
   const prevJsonHTMLComponent = useRef<string | null>(null);
+  const [finalHTML, setFinalHTML] = useState<string | null>(null);
 
   const currentJson = getCurrentJson();
 
@@ -31,6 +32,13 @@ export function JsonViewer() {
       setActiveTab('visualization');
     }
   }, [jsonHTMLComponent, activeTab]); // Only switch on first appearance
+
+  // Update finalHTML only when AI processing is complete
+  useEffect(() => {
+    if (!isAIProcessing && jsonHTMLComponent) {
+      setFinalHTML(jsonHTMLComponent);
+    }
+  }, [isAIProcessing, jsonHTMLComponent]);
 
   if (!currentJson) {
     return (
@@ -102,12 +110,28 @@ export function JsonViewer() {
           {jsonHTMLComponent && (
             <Tabs.Panel value='visualization' className='flex-1 overflow-hidden'>
               <div className='h-full w-full'>
-                <iframe
-                  srcDoc={jsonHTMLComponent.replace('{†RENDER_JSON†}', JSON.stringify(currentJson.data, null, 2))}
-                  className='w-full h-full border-0'
-                  sandbox='allow-scripts'
-                  title='JSON Visualization'
-                />
+                {isAIProcessing ? (
+                  <div className='h-full flex items-center justify-center'>
+                    <div className='text-center'>
+                      <span className='icon-[mdi--loading] w-12 h-12 text-blue-500 mx-auto mb-4 block animate-spin' />
+                      <Text size='md' fw={500} c='blue' className='mb-2'>
+                        Generating visualization...
+                      </Text>
+                      <Text size='sm' c='dimmed'>
+                        AI is creating your custom component
+                      </Text>
+                    </div>
+                  </div>
+                ) : (
+                  finalHTML && (
+                    <iframe
+                      srcDoc={finalHTML.replace('{†RENDER_JSON†}', JSON.stringify(currentJson.data, null, 2))}
+                      className='w-full h-full border-0'
+                      sandbox='allow-scripts'
+                      title='JSON Visualization'
+                    />
+                  )
+                )}
               </div>
             </Tabs.Panel>
           )}
