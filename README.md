@@ -8,6 +8,8 @@
 
 > 🚀 **Deepict** is an AI-powered JSON data visualization tool that makes complex JSON data intuitive and easy to understand. Through intelligent analysis and beautiful visualization interfaces, it helps developers quickly understand and analyze data structures.
 
+[Online Demo](https://deepict.deepaste.ai/)
+
 ## 🎥 Product Demo
 
 https://github.com/user-attachments/assets/3921b770-9c25-4598-9f65-d9460bbddde1
